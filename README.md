@@ -20,7 +20,7 @@ A web-based implementation of the card game "The Game" (also known as "Order!").
 
 \## Live Demo
 
-\[Play the game here](https://yourusername.github.io/your-repo-name/)
+\[Play the game here](https://abcceccotti.github.io/OrderGame/)
 
 
 
