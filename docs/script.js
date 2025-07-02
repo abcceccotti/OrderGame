@@ -212,15 +212,19 @@ function App() {
   const getPileStyle = (pile) => {
     const baseStyle = {
       background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
-      padding: "24px",
-      borderRadius: "16px",
+      padding: "16px",
+      borderRadius: "12px",
       textAlign: "center",
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+      boxShadow: "0 3px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)",
       border: "2px solid transparent",
       transition: "all 0.3s ease",
       cursor: selectedCard ? "pointer" : "default",
       position: "relative",
-      overflow: "hidden"
+      overflow: "hidden",
+      minHeight: "80px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center"
     };
 
     // Only highlight if there's a selected card AND it can be played on this pile
@@ -250,12 +254,29 @@ function App() {
   const styles = {
     container: {
       minHeight: "100vh",
-      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      background: "linear-gradient(135deg, #2D5A27 0%, #1A3D15 100%)",
       padding: "32px 20px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      position: "relative"
+    },
+    tableZone: {
+      background: "radial-gradient(ellipse at center, rgba(34, 90, 28, 0.6) 0%, rgba(26, 61, 21, 0.8) 100%)",
+      borderRadius: "24px",
+      padding: "32px",
+      marginBottom: "40px",
+      boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)",
+      border: "3px solid rgba(139, 69, 19, 0.4)",
+      position: "relative"
+    },
+    handZone: {
+      background: "linear-gradient(135deg, rgba(101, 67, 33, 0.3) 0%, rgba(78, 52, 46, 0.3) 100%)",
+      borderRadius: "20px",
+      padding: "24px",
+      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
+      border: "2px solid rgba(139, 69, 19, 0.3)"
     },
     title: {
       fontSize: "3.5rem",
@@ -270,18 +291,18 @@ function App() {
     pilesGrid: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      gap: "24px",
-      marginBottom: "32px",
+      gap: "16px",
+      marginBottom: "0",
       width: "100%",
-      maxWidth: "400px"
+      maxWidth: "280px"
     },
     pileArrow: {
-      fontSize: "28px",
-      marginBottom: "8px",
+      fontSize: "20px",
+      marginBottom: "4px",
       fontWeight: "bold"
     },
     pileValue: {
-      fontSize: "36px",
+      fontSize: "24px",
       fontWeight: "700",
       color: "#1f2937"
     },
@@ -306,7 +327,7 @@ function App() {
       background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
       padding: "20px 16px",
       borderRadius: "16px",
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
       width: "80px",
       height: "80px",
@@ -359,8 +380,9 @@ function App() {
       boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
     },
     buttonPrimary: {
-      background: "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)",
-      color: "white"
+      background: "linear-gradient(135deg, #FF6B35 0%, #D2691E 100%)",
+      color: "white",
+      boxShadow: "0 4px 12px rgba(255, 107, 53, 0.3)"
     },
     buttonDisabled: {
       opacity: 0.5,
@@ -420,6 +442,22 @@ function App() {
       padding: "8px 16px",
       borderRadius: "20px",
       backdropFilter: "blur(10px)"
+    },
+    tableZone: {
+      background: "radial-gradient(ellipse at center, rgba(34, 90, 28, 0.6) 0%, rgba(26, 61, 21, 0.8) 100%)",
+      borderRadius: "24px",
+      padding: "32px",
+      marginBottom: "40px",
+      boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)",
+      border: "3px solid rgba(139, 69, 19, 0.4)",
+      position: "relative"
+    },
+    handZone: {
+      background: "linear-gradient(135deg, rgba(101, 67, 33, 0.3) 0%, rgba(78, 52, 46, 0.3) 100%)",
+      borderRadius: "20px",
+      padding: "24px",
+      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
+      border: "2px solid rgba(139, 69, 19, 0.3)"
     }
   };
 
@@ -434,77 +472,67 @@ function App() {
         <span style={{ transform: "rotate(3deg)", display: "inline-block" }}>!</span>
       </h1>
       
-      <div style={styles.gameInfo}>
-        <div style={styles.infoItem}>Cards played: {playedThisTurn}/2</div>
-        <div style={styles.infoItem}>Cards left: {deck.length}</div>
-        <div style={styles.infoItem}>Hand: {hand.length}</div>
-      </div>
 
-      <div style={styles.pilesGrid}>
-        {[
-          { pile: "asc1", value: ascend1, color: "#2D7D84", arrow: "↑" },
-          { pile: "asc2", value: ascend2, color: "#D17A6B", arrow: "↑" },
-          { pile: "desc1", value: descend1, color: "#2D7D84", arrow: "↓" },
-          { pile: "desc2", value: descend2, color: "#D17A6B", arrow: "↓" }
-        ].map(({ pile, value, color, arrow }) => (
-          <div
-            key={pile}
-            style={getPileStyle(pile)}
-            onClick={() => selectedCard && playCard(selectedCard, pile)}
-            onMouseEnter={() => setHoveredPile(pile)}
-            onMouseLeave={() => setHoveredPile(null)}
-          >
-            <div style={{ ...styles.pileArrow, color }}>{arrow}</div>
-            <div style={styles.pileValue}>{value}</div>
-          </div>
-        ))}
-      </div>
 
-      <h2 style={styles.handTitle}>
-        <span style={{ transform: "rotate(-2deg)", display: "inline-block" }}>Y</span>
-        <span style={{ transform: "rotate(1deg)", display: "inline-block" }}>o</span>
-        <span style={{ transform: "rotate(-1deg)", display: "inline-block" }}>u</span>
-        <span style={{ transform: "rotate(2deg)", display: "inline-block" }}>r</span>
-        <span style={{ marginLeft: "8px", transform: "rotate(-1deg)", display: "inline-block" }}>H</span>
-        <span style={{ transform: "rotate(1deg)", display: "inline-block" }}>a</span>
-        <span style={{ transform: "rotate(-2deg)", display: "inline-block" }}>n</span>
-        <span style={{ transform: "rotate(1deg)", display: "inline-block" }}>d</span>
-      </h2>
-      <div style={styles.handContainer}>
-        {[...hand].sort((a, b) => a - b).map((card) => {
-          const isSelected = selectedCard === card;
-          const isJump10 = isJump10Card(card);
-          
-          return (
+      <div style={styles.tableZone}>
+        <div style={styles.pilesGrid}>
+          {[
+            { pile: "asc1", value: ascend1, color: "#2D7D84", arrow: "↑" },
+            { pile: "asc2", value: ascend2, color: "#D17A6B", arrow: "↑" },
+            { pile: "desc1", value: descend1, color: "#2D7D84", arrow: "↓" },
+            { pile: "desc2", value: descend2, color: "#D17A6B", arrow: "↓" }
+          ].map(({ pile, value, color, arrow }) => (
             <div
-              key={card}
-              style={{
-                ...styles.card,
-                ...(isJump10 ? styles.cardJump10 : {}),
-                ...(isSelected ? styles.cardSelected : {})
-              }}
-              onClick={() => setSelectedCard(isSelected ? null : card)}
-              onMouseEnter={(e) => {
-                if (!isSelected) {
-                  Object.assign(e.target.style, styles.cardHover);
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSelected) {
-                  e.target.style.transform = "translateY(0)";
-                  e.target.style.boxShadow = styles.card.boxShadow;
-                }
-              }}
+              key={pile}
+              style={getPileStyle(pile)}
+              onClick={() => selectedCard && playCard(selectedCard, pile)}
+              onMouseEnter={() => setHoveredPile(pile)}
+              onMouseLeave={() => setHoveredPile(null)}
             >
-              <div style={styles.cardNumber}>{card}</div>
-              {isJump10 && (
-                <div style={{ fontSize: "9px", color: "#D97706", fontWeight: "600" }}>
-                  JUMP 10!
-                </div>
-              )}
+              <div style={{ ...styles.pileArrow, color }}>{arrow}</div>
+              <div style={styles.pileValue}>{value}</div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+      </div>
+
+      <div style={styles.handZone}>
+        <div style={styles.handContainer}>
+          {[...hand].sort((a, b) => a - b).map((card) => {
+            const isSelected = selectedCard === card;
+            const isJump10 = isJump10Card(card);
+            
+            return (
+              <div
+                key={card}
+                style={{
+                  ...styles.card,
+                  ...(isJump10 ? styles.cardJump10 : {}),
+                  ...(isSelected ? styles.cardSelected : {})
+                }}
+                onClick={() => setSelectedCard(isSelected ? null : card)}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    Object.assign(e.target.style, styles.cardHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.target.style.transform = "translateY(0)";
+                    e.target.style.boxShadow = styles.card.boxShadow;
+                  }
+                }}
+              >
+                <div style={styles.cardNumber}>{card}</div>
+                {isJump10 && (
+                  <div style={{ fontSize: "9px", color: "#D97706", fontWeight: "600" }}>
+                    JUMP 10!
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div style={styles.buttonContainer}>
