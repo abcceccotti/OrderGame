@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+  text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.pile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 100px);
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.pile {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.pile-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-value {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.controls button {
+  margin: 5px;
+  padding: 8px 12px;
+}
+
+.deck {
+  background: white;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.deck-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.deck-card {
+  background: #eee;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.arrow {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.blue {
+  color: #3b82f6;
+}
+
+.red {
+  color: #ef4444;
+}
+
+.suggestion {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: purple;
+}
+
+.message {
+  color: red;
+  font-weight: bold;
+}
