@@ -309,16 +309,33 @@ function App() {
       position: "relative",
       overflow: "hidden"
     },
-    title: {
-      fontSize: "3.5rem",
-      fontWeight: "700",
-      marginBottom: "32px",
-      color: "white",
-      textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-      letterSpacing: "0.2em",
-      fontFamily: "'Inter', sans-serif",
-      display: "inline-block"
-    },
+    titleWithArrows: {
+  fontSize: "3.5rem",
+  fontWeight: "700",
+  marginBottom: "32px",
+  color: "white",
+  textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+  letterSpacing: "0.2em",
+  fontFamily: "'Inter', sans-serif",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px"
+},
+titleText: {
+  display: "flex",
+  margin: "0 15px"
+},
+titleLetter: {
+  display: "inline-block",
+  animation: "wiggle 1s ease-in-out infinite"
+},
+arrow: {
+  fontSize: "3rem",
+  fontWeight: "bold",
+  display: "inline-block",
+  animation: "wiggle 1s ease-in-out infinite"
+},
     pilesGrid: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -494,14 +511,20 @@ function App() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>
-        <span style={{ transform: "rotate(-6deg)", display: "inline-block" }}>O</span>
-        <span style={{ transform: "rotate(4deg)", display: "inline-block" }}>r</span>
-        <span style={{ transform: "rotate(-3deg)", display: "inline-block" }}>d</span>
-        <span style={{ transform: "rotate(5deg)", display: "inline-block" }}>e</span>
-        <span style={{ transform: "rotate(-4deg)", display: "inline-block" }}>r</span>
-        <span style={{ transform: "rotate(3deg)", display: "inline-block" }}>!</span>
-      </h1>
+      <h1 style={styles.titleWithArrows}>
+  <span style={styles.arrow} className="up-arrow teal">↑</span>
+  <span style={styles.arrow} className="down-arrow coral">↓</span>
+  <span style={styles.titleText}>
+    <span style={styles.titleLetter}>O</span>
+    <span style={styles.titleLetter}>r</span>
+    <span style={styles.titleLetter}>d</span>
+    <span style={styles.titleLetter}>e</span>
+    <span style={styles.titleLetter}>r</span>
+    <span style={styles.titleLetter}>!</span>
+  </span>
+  <span style={styles.arrow} className="up-arrow coral">↑</span>
+  <span style={styles.arrow} className="down-arrow teal">↓</span>
+</h1>
       
 {/* Progress Bar */}
       <div style={styles.progressContainer}>
@@ -658,3 +681,26 @@ function App() {
 
 // Render the app
 ReactDOM.render(React.createElement(App), document.getElementById('root'));
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+  
+  .up-arrow.teal { color: #2D7D84 !important; animation-delay: 0.2s; }
+  .up-arrow.coral { color: #D17A6B !important; animation-delay: 0.6s; }
+  .down-arrow.teal { color: #2D7D84 !important; animation-delay: 0.4s; }
+  .down-arrow.coral { color: #D17A6B !important; animation-delay: 0.8s; }
+  
+  .titleLetter:nth-child(1) { animation-delay: 0s; }
+  .titleLetter:nth-child(2) { animation-delay: 0.1s; }
+  .titleLetter:nth-child(3) { animation-delay: 0.2s; }
+  .titleLetter:nth-child(4) { animation-delay: 0.3s; }
+  .titleLetter:nth-child(5) { animation-delay: 0.4s; }
+  .titleLetter:nth-child(6) { animation-delay: 0.5s; }
+`;
+document.head.appendChild(style);
