@@ -278,6 +278,37 @@ function App() {
       boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
       border: "2px solid rgba(139, 69, 19, 0.3)"
     },
+    progressContainer: {
+      marginBottom: "32px",
+      textAlign: "center"
+    },
+    progressLabel: {
+      color: "white",
+      fontSize: "16px",
+      fontWeight: "600",
+      marginBottom: "12px",
+      textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)",
+      letterSpacing: "0.05em"
+    },
+    progressBarBg: {
+      width: "300px",
+      height: "20px",
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      borderRadius: "20px",
+      overflow: "hidden",
+      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
+      border: "2px solid rgba(255, 255, 255, 0.3)",
+      margin: "0 auto"
+    },
+    progressBarFill: {
+      height: "100%",
+      background: "linear-gradient(90deg, #10B981 0%, #34D399 50%, #6EE7B7 100%)",
+      borderRadius: "18px",
+      transition: "width 0.5s ease",
+      boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
+      position: "relative",
+      overflow: "hidden"
+    },
     title: {
       fontSize: "3.5rem",
       fontWeight: "700",
@@ -472,7 +503,20 @@ function App() {
         <span style={{ transform: "rotate(3deg)", display: "inline-block" }}>!</span>
       </h1>
       
-
+{/* Progress Bar */}
+      <div style={styles.progressContainer}>
+        <div style={styles.progressLabel}>
+          Cards Remaining: {hand.length + deck.length}/98
+        </div>
+        <div style={styles.progressBarBg}>
+          <div 
+            style={{
+              ...styles.progressBarFill,
+              width: `${((98 - hand.length - deck.length) / 98) * 100}%`
+            }}
+          />
+        </div>
+      </div>
 
       <div style={styles.tableZone}>
         <div style={styles.pilesGrid}>
