@@ -211,7 +211,7 @@ function App() {
 
   const getPileStyle = (pile) => {
     const baseStyle = {
-      background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+      background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
       padding: "16px",
       borderRadius: "12px",
       textAlign: "center",
@@ -254,7 +254,7 @@ function App() {
   const styles = {
     container: {
       minHeight: "100vh",
-      background: "linear-gradient(135deg, #2D5A27 0%, #1A3D15 100%)",
+      background: "linear-gradient(135deg, #FF8A65 0%, #D84315 100%)",
       padding: "32px 20px",
       display: "flex",
       flexDirection: "column",
@@ -372,7 +372,7 @@ arrow: {
       maxWidth: "600px"
     },
     card: {
-      background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+      background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
       padding: "20px 16px",
       borderRadius: "16px",
       boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
