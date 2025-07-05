@@ -367,7 +367,7 @@ arrow: {
     handContainer: {
       display: "flex",
       gap: "12px",
-      marginBottom: "32px",
+      marginBottom: "40px",
       flexWrap: "wrap",
       justifyContent: "center",
       maxWidth: "600px"
@@ -544,7 +544,6 @@ color: "#3E2723",
         </div>
       </div>
 
-      <div style={styles.tableZone}>
         <div style={styles.pilesGrid}>
           {[
             { pile: "asc1", value: ascend1, color: "#00695C", arrow: "↑" },
@@ -564,9 +563,7 @@ color: "#3E2723",
             </div>
           ))}
         </div>
-      </div>
 
-      <div style={styles.handZone}>
         <div style={styles.handContainer}>
           {[...hand].sort((a, b) => a - b).map((card) => {
             const isSelected = selectedCard === card;
@@ -603,7 +600,6 @@ color: "#3E2723",
             );
           })}
         </div>
-      </div>
 
       <div style={styles.buttonContainer}>
         <button
