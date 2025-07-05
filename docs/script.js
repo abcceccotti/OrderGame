@@ -331,9 +331,9 @@ arrow: {
       maxWidth: "280px"
     },
     pileArrow: {
-  fontSize: "36px",
-  marginBottom: "8px",
-  fontWeight: "900",
+  fontSize: "48px",
+  marginBottom: "6px",
+  fontWeight: "bold",
   WebkitTextStroke: "2px currentColor",
   textShadow: "2px 0 0 currentColor, -2px 0 0 currentColor, 0 2px 0 currentColor, 0 -2px 0 currentColor"
 },
