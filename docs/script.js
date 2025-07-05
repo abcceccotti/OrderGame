@@ -518,10 +518,10 @@ color: "#3E2723",
 
         <div style={styles.pilesGrid}>
           {[
-            { pile: "asc1", value: ascend1, color: "#00695C", arrow: "↑" },
-{ pile: "asc2", value: ascend2, color: "#BF360C", arrow: "↑" },
-{ pile: "desc1", value: descend1, color: "#00695C", arrow: "↓" },
-{ pile: "desc2", value: descend2, color: "#BF360C", arrow: "↓" }
+            { pile: "asc1", value: ascend1, color: "#00695C", arrow: "⬆" },
+{ pile: "asc2", value: ascend2, color: "#BF360C", arrow: "⬆" },
+{ pile: "desc1", value: descend1, color: "#00695C", arrow: "⬇" },
+{ pile: "desc2", value: descend2, color: "#BF360C", arrow: "⬇" }
           ].map(({ pile, value, color, arrow }) => (
             <div
               key={pile}
