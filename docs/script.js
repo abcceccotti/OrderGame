@@ -315,8 +315,7 @@ titleTile: {
   alignItems: "center",
   border: "2px solid transparent",
   position: "relative",
-  outline: "none",
-  animation: "wiggle 1s ease-in-out infinite"
+  outline: "none"
 },
 titleTileLetter: {
   fontSize: "48px",
@@ -492,19 +491,19 @@ color: "#3E2723",
 
   return (
     <div style={styles.titleContainer}>
-  <div style={{...styles.titleTile, animationDelay: "0s"}}>
+  <div style={styles.titleTile} className="wiggle-animation" data-delay="0s">
     <div style={styles.titleTileLetter}>J</div>
   </div>
-  <div style={{...styles.titleTile, animationDelay: "0.1s"}}>
+  <div style={styles.titleTile} className="wiggle-animation" data-delay="0.1s">
     <div style={styles.titleTileLetter}>U</div>
   </div>
-  <div style={{...styles.titleTile, animationDelay: "0.2s"}}>
+  <div style={styles.titleTile} className="wiggle-animation" data-delay="0.2s">
     <div style={styles.titleTileLetter}>M</div>
   </div>
-  <div style={{...styles.titleTile, animationDelay: "0.3s"}}>
+  <div style={styles.titleTile} className="wiggle-animation" data-delay="0.3s">
     <div style={styles.titleTileLetter}>P</div>
   </div>
-  <div style={{...styles.titleTile, animationDelay: "0.4s"}}>
+  <div style={styles.titleTile} className="wiggle-animation" data-delay="0.4s">
     <div style={styles.titleTileNumber}>10</div>
   </div>
 </div>
@@ -670,4 +669,8 @@ style.textContent = `
     75% { transform: rotate(3deg); }
   }
   
+  .wiggle-animation {
+    animation: wiggle 1s ease-in-out infinite;
+  }
 `;
+document.head.appendChild(style);
