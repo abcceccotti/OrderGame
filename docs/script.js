@@ -323,7 +323,7 @@ arrow: {
     pilesGrid: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      gap: "4px",
+      gap: "6px",
       marginBottom: "48px",
       width: "100%",
       maxWidth: "280px"
