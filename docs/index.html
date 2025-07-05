@@ -55,6 +55,7 @@
             const [showDeck, setShowDeck] = useState(false);
             const [hoveredPile, setHoveredPile] = useState(null);
             const [selectedCard, setSelectedCard] = useState(null);
+const [showMenu, setShowMenu] = useState(false);
 
             useEffect(() => {
                 startNewGame();
@@ -249,7 +250,7 @@
             const getPileStyle = (pile) => {
                 const baseStyle = {
                     background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
-                    padding: "16px",
+                    padding: "12px",
                     borderRadius: "12px",
                     textAlign: "center",
                     boxShadow: "0 3px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -258,7 +259,7 @@
                     cursor: selectedCard ? "pointer" : "default",
                     position: "relative",
                     overflow: "hidden",
-                    minHeight: "70px",
+                    minHeight: "55px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center"
@@ -368,18 +369,18 @@
                 pilesGrid: {
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "8px",
-                    marginBottom: "32px",
+                    gap: "6px",
+                    marginBottom: "24px",
                     width: "100%",
-                    maxWidth: "240px"
+                    maxWidth: "200px"
                 },
                 pileArrow: {
                     fontSize: "42px",
-                    marginBottom: "4px",
+                    marginBottom: "2px",
                     fontWeight: "900"
                 },
                 pileValue: {
-                    fontSize: "36px",
+                    fontSize: "28px",
                     fontWeight: "800",
                     color: "#2E2E2E",
                     letterSpacing: "0.02em"
@@ -393,6 +394,49 @@
                     letterSpacing: "0.1em",
                     display: "inline-block"
                 },
+menuButton: {
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    background: "rgba(255, 255, 255, 0.9)",
+    border: "none",
+    borderRadius: "50%",
+    width: "50px",
+    height: "50px",
+    cursor: "pointer",
+    fontSize: "20px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+    zIndex: 1000
+},
+menuDropdown: {
+    position: "absolute",
+    top: "70px",
+    right: "20px",
+    background: "white",
+    borderRadius: "12px",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+    padding: "16px",
+    minWidth: "200px",
+    zIndex: 1000
+},
+menuItem: {
+    padding: "8px 12px",
+    margin: "4px 0",
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+    borderRadius: "6px",
+    width: "100%",
+    textAlign: "left",
+    fontSize: "14px"
+},
+instructions: {
+    maxHeight: "300px",
+    overflowY: "auto",
+    padding: "12px",
+    fontSize: "14px",
+    lineHeight: "1.5"
+},
                 handContainer: {
                     display: "flex",
                     gap: "12px",
@@ -527,6 +571,43 @@
 
             return React.createElement("div", { style: styles.container }, 
                 React.createElement("div", { style: styles.titleContainer },
+React.createElement("button", {
+    onClick: () => setShowMenu(!showMenu),
+    style: styles.menuButton
+}, "☰"),
+
+showMenu && React.createElement("div", { style: styles.menuDropdown },
+    React.createElement("button", {
+        onClick: startNewGame,
+        style: styles.menuItem
+    }, "🎮 New Game"),
+    React.createElement("button", {
+        onClick: () => {
+            setShowSuggestion(!showSuggestion);
+            setSuggestion(getBestMove());
+        },
+        style: styles.menuItem
+    }, showSuggestion ? "🙈 Hide Hint" : "💡 Show Hint"),
+    React.createElement("button", {
+        onClick: () => setShowDeck(!showDeck),
+        style: styles.menuItem
+    }, showDeck ? "🃏 Hide Deck" : "🔍 Show Deck"),
+    React.createElement("div", { style: { borderTop: "1px solid #eee", margin: "8px 0" } }),
+    React.createElement("div", { style: styles.instructions },
+        React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
+        React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
+        React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
+        React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
+            React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
+            React.createElement("li", {}, "▼ piles: Play cards in descending order"),
+            React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
+            React.createElement("li", {}, "Must play at least 2 cards per turn")
+        ),
+        React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
+            "Developed by Andre Ceccotti")
+    )
+),
+
                     React.createElement("div", { style: styles.titleTile, className: "wiggle-animation" },
                         React.createElement("div", { style: styles.titleTileLetter }, "J")
                     ),
@@ -543,7 +624,7 @@
                         React.createElement("div", { style: styles.titleTileNumber }, "10")
                     )
                 ),
-                
+
                 React.createElement("div", { style: styles.progressContainer },
                     React.createElement("div", { style: styles.progressLabel },
                         `Cards Remaining: ${hand.length + deck.length}/98`
@@ -612,36 +693,24 @@
                 ),
 
                 React.createElement("div", { style: styles.buttonContainer },
-                    React.createElement("button", {
-                        onClick: endTurn,
-                        disabled: playedThisTurn < 2 || gameOver,
-                        style: {
-                            ...styles.button,
-                            ...styles.buttonPrimary,
-                            ...(playedThisTurn < 2 || gameOver ? styles.buttonDisabled : {})
-                        }
-                    }, "End Turn"),
-                    React.createElement("button", { onClick: startNewGame, style: styles.button }, "New Game"),
-                    React.createElement("button", {
-                        onClick: undo,
-                        disabled: history.length === 0,
-                        style: {
-                            ...styles.button,
-                            ...(history.length === 0 ? styles.buttonDisabled : {})
-                        }
-                    }, "Undo"),
-                    React.createElement("button", {
-                        onClick: () => {
-                            setShowSuggestion(!showSuggestion);
-                            setSuggestion(getBestMove());
-                        },
-                        style: styles.button
-                    }, showSuggestion ? "Hide Hint" : "Show Hint"),
-                    React.createElement("button", {
-                        onClick: () => setShowDeck(!showDeck),
-                        style: styles.button
-                    }, showDeck ? "Hide Deck" : "Show Deck")
-                ),
+    React.createElement("button", {
+        onClick: endTurn,
+        disabled: playedThisTurn < 2 || gameOver,
+        style: {
+            ...styles.button,
+            ...styles.buttonPrimary,
+            ...(playedThisTurn < 2 || gameOver ? styles.buttonDisabled : {})
+        }
+    }, "End Turn"),
+    React.createElement("button", {
+        onClick: undo,
+        disabled: history.length === 0,
+        style: {
+            ...styles.button,
+            ...(history.length === 0 ? styles.buttonDisabled : {})
+        }
+    }, "Undo")
+),
 
                 showSuggestion && React.createElement("div", { style: styles.suggestion },
                     typeof suggestion === 'string' ? suggestion : 
