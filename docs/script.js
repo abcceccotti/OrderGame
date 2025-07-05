@@ -293,34 +293,42 @@ if (hoveredPile === pile && canPlay) {
       position: "relative",
       overflow: "hidden"
     },
-    titleWithArrows: {
-  fontSize: "4rem",
-fontWeight: "800",
-  marginBottom: "32px",
-  color: "white",
-  textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-  letterSpacing: "0.2em",
-  fontFamily: "'Nunito', 'Poppins', sans-serif",
+    titleContainer: {
   display: "flex",
+  gap: "12px",
   alignItems: "center",
   justifyContent: "center",
-  gap: "8px"
+  flexWrap: "wrap",
+  marginBottom: "32px"
 },
-titleText: {
+titleTile: {
+  background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
+  padding: "20px 16px",
+  borderRadius: "16px",
+  boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
+  textAlign: "center",
+  width: "80px",
+  height: "80px",
   display: "flex",
-  margin: "0 15px"
-},
-titleLetter: {
-  display: "inline-block",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  border: "2px solid transparent",
+  position: "relative",
+  outline: "none",
   animation: "wiggle 1s ease-in-out infinite"
 },
-arrow: {
-  fontSize: "3rem",
-  fontWeight: "900",
-  display: "inline-block",
-  animation: "wiggle 1s ease-in-out infinite",
-  textShadow: "0 0 2px currentColor, 0 0 4px currentColor",
-  letterSpacing: "0.1em"
+titleTileLetter: {
+  fontSize: "48px",
+  fontWeight: "800",
+  color: "#2E2E2E",
+  letterSpacing: "0.02em"
+},
+titleTileNumber: {
+  fontSize: "44px",
+  fontWeight: "800",
+  color: "#2E2E2E",
+  letterSpacing: "0.02em"
 },
     pilesGrid: {
       display: "grid",
@@ -484,20 +492,23 @@ color: "#3E2723",
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.titleWithArrows}>
-  <span style={styles.arrow} className="up-arrow teal">↑</span>
-  <span style={styles.arrow} className="down-arrow coral">↓</span>
-  <span style={styles.titleText}>
-    <span style={styles.titleLetter}>O</span>
-    <span style={styles.titleLetter}>r</span>
-    <span style={styles.titleLetter}>d</span>
-    <span style={styles.titleLetter}>e</span>
-    <span style={styles.titleLetter}>r</span>
-    <span style={styles.titleLetter}>!</span>
-  </span>
-  <span style={styles.arrow} className="up-arrow coral">↑</span>
-  <span style={styles.arrow} className="down-arrow teal">↓</span>
-</h1>
+      <div style={styles.titleContainer}>
+  <div style={styles.titleTile}>
+    <div style={styles.titleTileLetter}>J</div>
+  </div>
+  <div style={styles.titleTile}>
+    <div style={styles.titleTileLetter}>U</div>
+  </div>
+  <div style={styles.titleTile}>
+    <div style={styles.titleTileLetter}>M</div>
+  </div>
+  <div style={styles.titleTile}>
+    <div style={styles.titleTileLetter}>P</div>
+  </div>
+  <div style={styles.titleTile}>
+    <div style={styles.titleTileNumber}>10</div>
+  </div>
+</div>
       
 {/* Progress Bar */}
       <div style={styles.progressContainer}>
@@ -665,11 +676,9 @@ style.textContent = `
   .down-arrow.teal { color: #2D7D84 !important; animation-delay: 0.4s; }
   .down-arrow.coral { color: #D17A6B !important; animation-delay: 0.8s; }
   
-  .titleLetter:nth-child(1) { animation-delay: 0s; }
-  .titleLetter:nth-child(2) { animation-delay: 0.1s; }
-  .titleLetter:nth-child(3) { animation-delay: 0.2s; }
-  .titleLetter:nth-child(4) { animation-delay: 0.3s; }
-  .titleLetter:nth-child(5) { animation-delay: 0.4s; }
-  .titleLetter:nth-child(6) { animation-delay: 0.5s; }
+  .titleTile:nth-child(1) { animation-delay: 0s; }
+  .titleTile:nth-child(2) { animation-delay: 0.1s; }
+  .titleTile:nth-child(3) { animation-delay: 0.2s; }
+  .titleTile:nth-child(4) { animation-delay: 0.3s; }
+  .titleTile:nth-child(5) { animation-delay: 0.4s; }
 `;
-document.head.appendChild(style);
