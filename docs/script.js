@@ -262,22 +262,6 @@ if (hoveredPile === pile && canPlay) {
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       position: "relative"
     },
-    tableZone: {
-      background: "radial-gradient(ellipse at center, rgba(34, 90, 28, 0.6) 0%, rgba(26, 61, 21, 0.8) 100%)",
-      borderRadius: "24px",
-      padding: "32px",
-      marginBottom: "40px",
-      boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)",
-      border: "3px solid rgba(139, 69, 19, 0.4)",
-      position: "relative"
-    },
-    handZone: {
-      background: "linear-gradient(135deg, rgba(101, 67, 33, 0.3) 0%, rgba(78, 52, 46, 0.3) 100%)",
-      borderRadius: "20px",
-      padding: "24px",
-      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
-      border: "2px solid rgba(139, 69, 19, 0.3)"
-    },
     progressContainer: {
       marginBottom: "32px",
       textAlign: "center"
@@ -493,22 +477,6 @@ color: "#3E2723",
   borderRadius: "20px",
   backdropFilter: "blur(10px)",
   border: "1px solid rgba(255, 255, 255, 0.2)"
-},
-    tableZone: {
-      background: "radial-gradient(ellipse at center, rgba(34, 90, 28, 0.6) 0%, rgba(26, 61, 21, 0.8) 100%)",
-      borderRadius: "24px",
-      padding: "32px",
-      marginBottom: "40px",
-      boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)",
-      border: "3px solid rgba(139, 69, 19, 0.4)",
-      position: "relative"
-    },
-    handZone: {
-      background: "linear-gradient(135deg, rgba(101, 67, 33, 0.3) 0%, rgba(78, 52, 46, 0.3) 100%)",
-      borderRadius: "20px",
-      padding: "24px",
-      boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
-      border: "2px solid rgba(139, 69, 19, 0.3)"
     }
   };
 
