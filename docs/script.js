@@ -323,7 +323,7 @@ arrow: {
     pilesGrid: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      gap: "16px",
+      gap: "8px",
       marginBottom: "48px",
       width: "100%",
       maxWidth: "280px"
@@ -334,7 +334,7 @@ arrow: {
       fontWeight: "bold"
     },
     pileValue: {
-  fontSize: "32px",
+  fontSize: "48px",
   fontWeight: "800",
   color: "#2E2E2E",
   letterSpacing: "0.02em"
