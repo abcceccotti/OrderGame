@@ -441,7 +441,7 @@ arrow: {
       fontWeight: "600",
       fontSize: "18px",
       color: "#1f2937",
-      background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+      background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
       padding: "12px 20px",
       borderRadius: "8px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)"
