@@ -231,22 +231,22 @@ function App() {
     const canPlay = selectedCard && canPlayCardOnPile(selectedCard, pile);
 
     if (canPlay) {
-      return {
-        ...baseStyle,
-        border: "2px solid #10B981",
-        boxShadow: "0 4px 20px rgba(16, 185, 129, 0.3)",
-        transform: "translateY(-2px)"
-      };
-    }
+  return {
+    ...baseStyle,
+    border: "2px solid #FF8F00",
+    boxShadow: "0 4px 20px rgba(255, 143, 0, 0.4)",
+    transform: "translateY(-2px)"
+  };
+}
 
-    if (hoveredPile === pile && canPlay) {
-      return {
-        ...baseStyle,
-        border: "2px solid #059669",
-        boxShadow: "0 6px 24px rgba(16, 185, 129, 0.4)",
-        transform: "translateY(-4px)"
-      };
-    }
+if (hoveredPile === pile && canPlay) {
+  return {
+    ...baseStyle,
+    border: "2px solid #F57C00",
+    boxShadow: "0 6px 24px rgba(245, 124, 0, 0.5)",
+    transform: "translateY(-4px)"
+  };
+}
 
     return baseStyle;
   };
@@ -302,10 +302,10 @@ function App() {
     },
     progressBarFill: {
       height: "100%",
-      background: "linear-gradient(90deg, #10B981 0%, #34D399 50%, #6EE7B7 100%)",
+      background: "linear-gradient(90deg, #FF8F00 0%, #FFA726 50%, #FFB74D 100%)",
       borderRadius: "18px",
       transition: "width 0.5s ease",
-      boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
+      boxShadow: "0 0 10px rgba(255, 143, 0, 0.5)",
       position: "relative",
       overflow: "hidden"
     },
@@ -395,11 +395,11 @@ arrow: {
       boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)"
     },
     cardSelected: {
-      background: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)",
-      border: "2px solid #3B82F6",
-      boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)",
-      transform: "translateY(-4px)"
-    },
+  background: "linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)",
+  border: "2px solid #FF8F00",
+  boxShadow: "0 8px 24px rgba(255, 143, 0, 0.4)",
+  transform: "translateY(-4px)"
+},
     cardJump10: {
       background: "linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)"
     },
@@ -488,11 +488,12 @@ color: "#3E2723",
       fontWeight: "500"
     },
     infoItem: {
-      background: "rgba(255, 255, 255, 0.1)",
-      padding: "8px 16px",
-      borderRadius: "20px",
-      backdropFilter: "blur(10px)"
-    },
+  background: "rgba(255, 255, 255, 0.15)",
+  padding: "8px 16px",
+  borderRadius: "20px",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(255, 255, 255, 0.2)"
+},
     tableZone: {
       background: "radial-gradient(ellipse at center, rgba(34, 90, 28, 0.6) 0%, rgba(26, 61, 21, 0.8) 100%)",
       borderRadius: "24px",
