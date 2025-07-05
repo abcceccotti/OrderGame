@@ -300,16 +300,8 @@ const [showMenu, setShowMenu] = useState(false);
                     position: "relative"
                 },
                 progressContainer: {
-                    marginBottom: "32px",
+                    marginBottom: "20px",
                     textAlign: "center"
-                },
-                progressLabel: {
-                    color: "white",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    marginBottom: "12px",
-                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)",
-                    letterSpacing: "0.05em"
                 },
                 progressBarBg: {
                     width: "300px",
@@ -370,7 +362,7 @@ const [showMenu, setShowMenu] = useState(false);
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
                     gap: "6px",
-                    marginBottom: "24px",
+                    marginBottom: "20px",
                     width: "100%",
                     maxWidth: "200px"
                 },
@@ -440,7 +432,7 @@ instructions: {
                 handContainer: {
                     display: "flex",
                     gap: "12px",
-                    marginBottom: "40px",
+                    marginBottom: "24px",
                     flexWrap: "wrap",
                     justifyContent: "center",
                     maxWidth: "600px"
@@ -626,9 +618,6 @@ showMenu && React.createElement("div", { style: styles.menuDropdown },
                 ),
 
                 React.createElement("div", { style: styles.progressContainer },
-                    React.createElement("div", { style: styles.progressLabel },
-                        `Cards Remaining: ${hand.length + deck.length}/98`
-                    ),
                     React.createElement("div", { style: styles.progressBarBg },
                         React.createElement("div", { 
                             style: {
