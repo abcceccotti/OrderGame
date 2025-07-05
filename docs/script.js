@@ -334,8 +334,8 @@ arrow: {
   fontSize: "36px",
   marginBottom: "8px",
   fontWeight: "900",
-  transform: "scaleX(1.5)",
-  textShadow: "0 0 2px currentColor, 0 0 4px currentColor"
+  WebkitTextStroke: "2px currentColor",
+  textShadow: "2px 0 0 currentColor, -2px 0 0 currentColor, 0 2px 0 currentColor, 0 -2px 0 currentColor"
 },
     pileValue: {
   fontSize: "48px",
