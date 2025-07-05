@@ -491,21 +491,20 @@ color: "#3E2723",
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.titleContainer}>
-  <div style={styles.titleTile}>
+    <div style={styles.titleContainer}>
+  <div style={{...styles.titleTile, animationDelay: "0s"}}>
     <div style={styles.titleTileLetter}>J</div>
   </div>
-  <div style={styles.titleTile}>
+  <div style={{...styles.titleTile, animationDelay: "0.1s"}}>
     <div style={styles.titleTileLetter}>U</div>
   </div>
-  <div style={styles.titleTile}>
+  <div style={{...styles.titleTile, animationDelay: "0.2s"}}>
     <div style={styles.titleTileLetter}>M</div>
   </div>
-  <div style={styles.titleTile}>
+  <div style={{...styles.titleTile, animationDelay: "0.3s"}}>
     <div style={styles.titleTileLetter}>P</div>
   </div>
-  <div style={styles.titleTile}>
+  <div style={{...styles.titleTile, animationDelay: "0.4s"}}>
     <div style={styles.titleTileNumber}>10</div>
   </div>
 </div>
@@ -671,14 +670,4 @@ style.textContent = `
     75% { transform: rotate(3deg); }
   }
   
-  .up-arrow.teal { color: #2D7D84 !important; animation-delay: 0.2s; }
-  .up-arrow.coral { color: #D17A6B !important; animation-delay: 0.6s; }
-  .down-arrow.teal { color: #2D7D84 !important; animation-delay: 0.4s; }
-  .down-arrow.coral { color: #D17A6B !important; animation-delay: 0.8s; }
-  
-  .titleTile:nth-child(1) { animation-delay: 0s; }
-  .titleTile:nth-child(2) { animation-delay: 0.1s; }
-  .titleTile:nth-child(3) { animation-delay: 0.2s; }
-  .titleTile:nth-child(4) { animation-delay: 0.3s; }
-  .titleTile:nth-child(5) { animation-delay: 0.4s; }
 `;
