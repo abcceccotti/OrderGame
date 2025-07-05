@@ -259,7 +259,7 @@ if (hoveredPile === pile && canPlay) {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: "'Nunito', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
       position: "relative"
     },
     progressContainer: {
@@ -300,7 +300,7 @@ fontWeight: "800",
   color: "white",
   textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
   letterSpacing: "0.2em",
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "'Nunito', 'Poppins', sans-serif",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -324,13 +324,13 @@ arrow: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
       gap: "16px",
-      marginBottom: "0",
+      marginBottom: "48px",
       width: "100%",
       maxWidth: "280px"
     },
     pileArrow: {
-      fontSize: "20px",
-      marginBottom: "4px",
+      fontSize: "36px",
+      marginBottom: "8px",
       fontWeight: "bold"
     },
     pileValue: {
