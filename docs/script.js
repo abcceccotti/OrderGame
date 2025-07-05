@@ -331,7 +331,7 @@ arrow: {
     pileArrow: {
       fontSize: "36px",
       marginBottom: "8px",
-      fontWeight: "900"
+      fontWeight: "1200"
     },
     pileValue: {
   fontSize: "48px",
