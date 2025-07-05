@@ -423,15 +423,15 @@ arrow: {
       fontSize: "14px",
       cursor: "pointer",
       transition: "all 0.3s ease",
-      background: "linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%)",
-      color: "#374151",
+      background: "linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%)",
+color: "#3E2723",
       boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
     },
     buttonPrimary: {
-      background: "linear-gradient(135deg, #FF6B35 0%, #D2691E 100%)",
-      color: "white",
-      boxShadow: "0 4px 12px rgba(255, 107, 53, 0.3)"
-    },
+  background: "linear-gradient(135deg, #D84315 0%, #BF360C 100%)",
+  color: "white",
+  boxShadow: "0 4px 12px rgba(216, 67, 21, 0.3)"
+},
     buttonDisabled: {
       opacity: 0.5,
       cursor: "not-allowed"
@@ -544,10 +544,10 @@ arrow: {
       <div style={styles.tableZone}>
         <div style={styles.pilesGrid}>
           {[
-            { pile: "asc1", value: ascend1, color: "#2D7D84", arrow: "↑" },
-            { pile: "asc2", value: ascend2, color: "#D17A6B", arrow: "↑" },
-            { pile: "desc1", value: descend1, color: "#2D7D84", arrow: "↓" },
-            { pile: "desc2", value: descend2, color: "#D17A6B", arrow: "↓" }
+            { pile: "asc1", value: ascend1, color: "#00695C", arrow: "↑" },
+{ pile: "asc2", value: ascend2, color: "#BF360C", arrow: "↑" },
+{ pile: "desc1", value: descend1, color: "#00695C", arrow: "↓" },
+{ pile: "desc2", value: descend2, color: "#BF360C", arrow: "↓" }
           ].map(({ pile, value, color, arrow }) => (
             <div
               key={pile}
