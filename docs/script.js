@@ -310,8 +310,8 @@ function App() {
       overflow: "hidden"
     },
     titleWithArrows: {
-  fontSize: "3.5rem",
-  fontWeight: "700",
+  fontSize: "4rem",
+fontWeight: "800",
   marginBottom: "32px",
   color: "white",
   textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
@@ -350,10 +350,11 @@ arrow: {
       fontWeight: "bold"
     },
     pileValue: {
-      fontSize: "24px",
-      fontWeight: "700",
-      color: "#1f2937"
-    },
+  fontSize: "32px",
+  fontWeight: "800",
+  color: "#2E2E2E",
+  letterSpacing: "0.02em"
+},
     handTitle: {
       fontSize: "1.5rem",
       fontWeight: "600",
@@ -403,11 +404,12 @@ arrow: {
       background: "linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)"
     },
     cardNumber: {
-      fontSize: "20px",
-      fontWeight: "700",
-      marginBottom: "8px",
-      color: "#1f2937"
-    },
+  fontSize: "28px",
+  fontWeight: "800",
+  marginBottom: "8px",
+  color: "#2E2E2E",
+  letterSpacing: "0.02em"
+},
     buttonContainer: {
       display: "flex",
       gap: "12px",
