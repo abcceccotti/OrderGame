@@ -331,10 +331,12 @@ arrow: {
       maxWidth: "280px"
     },
     pileArrow: {
-      fontSize: "36px",
-      marginBottom: "8px",
-      fontWeight: "900"
-    },
+  fontSize: "36px",
+  marginBottom: "8px",
+  fontWeight: "900",
+  transform: "scaleX(1.5)",
+  textShadow: "0 0 2px currentColor, 0 0 4px currentColor"
+},
     pileValue: {
   fontSize: "48px",
   fontWeight: "800",
