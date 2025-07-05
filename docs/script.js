@@ -316,9 +316,11 @@ titleLetter: {
 },
 arrow: {
   fontSize: "3rem",
-  fontWeight: "bold",
+  fontWeight: "900",
   display: "inline-block",
-  animation: "wiggle 1s ease-in-out infinite"
+  animation: "wiggle 1s ease-in-out infinite",
+  textShadow: "0 0 2px currentColor, 0 0 4px currentColor",
+  letterSpacing: "0.1em"
 },
     pilesGrid: {
       display: "grid",
@@ -331,7 +333,7 @@ arrow: {
     pileArrow: {
       fontSize: "36px",
       marginBottom: "8px",
-      fontWeight: "1200"
+      fontWeight: "900"
     },
     pileValue: {
   fontSize: "48px",
