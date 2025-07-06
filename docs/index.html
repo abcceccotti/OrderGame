@@ -6,6 +6,11 @@
     <title>Jump 10 Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+@keyframes popup {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
         @keyframes wiggle {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-3deg); }
@@ -56,6 +61,9 @@
             const [hoveredPile, setHoveredPile] = useState(null);
             const [selectedCard, setSelectedCard] = useState(null);
 const [showMenu, setShowMenu] = useState(false);
+const [menuView, setMenuView] = useState("instructions");
+const [showPopup, setShowPopup] = useState(false);
+const [popupType, setPopupType] = useState(""); // "win" or "lose"
 
             useEffect(() => {
                 startNewGame();
@@ -126,6 +134,20 @@ const [showMenu, setShowMenu] = useState(false);
 
                 setHand(hand.filter((c) => c !== card));
                 setPlayedThisTurn(playedThisTurn + 1);
+// Check for mid-turn game over
+const updatedHand = hand.filter((c) => c !== card);
+const currentPiles = { ascend1, ascend2, descend1, descend2 };
+if (pile === "asc1") currentPiles.ascend1 = card;
+else if (pile === "asc2") currentPiles.ascend2 = card;
+else if (pile === "desc1") currentPiles.descend1 = card;
+else if (pile === "desc2") currentPiles.descend2 = card;
+
+if (playedThisTurn + 1 < 2 && !hasLegalMove(updatedHand, currentPiles)) {
+    setGameOver(true);
+    setPopupType("lose");
+    setShowPopup(true);
+}
+
                 setMessage("");
                 setSelectedCard(null);
             };
@@ -158,15 +180,17 @@ const [showMenu, setShowMenu] = useState(false);
                 setPlayedThisTurn(0);
 
                 if (newHand.length === 0 && remainingDeck.length === 0) {
-                    setGameOver(true);
-                    setMessage("🎉 You played all cards! You win!");
-                    return;
-                }
+    setGameOver(true);
+    setPopupType("win");
+    setShowPopup(true);
+    return;
+}
 
                 if (!hasLegalMove(newHand, { ascend1, ascend2, descend1, descend2 })) {
-                    setGameOver(true);
-                    setMessage("No legal moves left. Game Over.");
-                }
+    setGameOver(true);
+    setPopupType("lose");
+    setShowPopup(true);
+}
             };
 
             const getBestMove = () => {
@@ -223,14 +247,15 @@ const [showMenu, setShowMenu] = useState(false);
                 setPlayedThisTurn(last.playedThisTurn);
                 setHistory(history.slice(0, -1));
                 setMessage("");
+setGameOver(false);
             };
 
             const getPileArrow = (pile) => {
-                if (pile === "asc1") return React.createElement("span", { style: { color: "#2D7D84" } }, "↑");
-                if (pile === "asc2") return React.createElement("span", { style: { color: "#D17A6B" } }, "↑");
-                if (pile === "desc1") return React.createElement("span", { style: { color: "#2D7D84" } }, "↓");
-                if (pile === "desc2") return React.createElement("span", { style: { color: "#D17A6B" } }, "↓");
-            };
+    if (pile === "asc1") return React.createElement("span", { style: { color: "#1565C0" } }, "↑");
+    if (pile === "asc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "↑");
+    if (pile === "desc1") return React.createElement("span", { style: { color: "#1565C0" } }, "↓");
+    if (pile === "desc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "↓");
+};
 
             const isJump10Card = (card) => {
                 if (card === ascend1 - 10 || card === ascend2 - 10) return true;
@@ -249,8 +274,8 @@ const [showMenu, setShowMenu] = useState(false);
 
             const getPileStyle = (pile) => {
                 const baseStyle = {
-                    background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
-                    padding: "12px",
+                    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
+                    padding: "10px",
                     borderRadius: "12px",
                     textAlign: "center",
                     boxShadow: "0 3px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -259,7 +284,8 @@ const [showMenu, setShowMenu] = useState(false);
                     cursor: selectedCard ? "pointer" : "default",
                     position: "relative",
                     overflow: "hidden",
-                    minHeight: "55px",
+                    minHeight: "85px",
+width: "85px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center"
@@ -291,7 +317,7 @@ const [showMenu, setShowMenu] = useState(false);
             const styles = {
                 container: {
                     minHeight: "100vh",
-                    background: "linear-gradient(135deg, #FF8A65 0%, #D84315 100%)",
+                    background: "repeating-linear-gradient(45deg, #004494, #004494 8px, #0060B6 8px, #0060B6 16px)",
                     padding: "32px 20px",
                     display: "flex",
                     flexDirection: "column",
@@ -315,7 +341,7 @@ const [showMenu, setShowMenu] = useState(false);
                 },
                 progressBarFill: {
                     height: "100%",
-                    background: "linear-gradient(90deg, #FF8F00 0%, #FFA726 50%, #FFB74D 100%)",
+                    background: "linear-gradient(90deg, #FFB62E 0%, #FFDF7E 50%, #D88B00 100%)",
                     borderRadius: "18px",
                     transition: "width 0.5s ease",
                     boxShadow: "0 0 10px rgba(255, 143, 0, 0.5)",
@@ -331,7 +357,7 @@ const [showMenu, setShowMenu] = useState(false);
     marginBottom: "24px"
 },
                 titleTile: {
-    background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
+    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
     padding: "12px 8px",
     borderRadius: "12px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -349,34 +375,37 @@ const [showMenu, setShowMenu] = useState(false);
                 titleTileLetter: {
                     fontSize: "32px",
                     fontWeight: "800",
-                    color: "#2E2E2E",
+                    color: "#3E2A00",
                     letterSpacing: "0.02em"
                 },
                 titleTileNumber: {
                     fontSize: "28px",
                     fontWeight: "800",
-                    color: "#2E2E2E",
+                    color: "#3E2A00",
                     letterSpacing: "0.02em"
                 },
                 pilesGrid: {
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "6px",
-                    marginBottom: "20px",
-                    width: "100%",
-                    maxWidth: "200px"
-                },
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "12px",
+    marginBottom: "20px",
+    width: "210px",
+    justifySelf: "center"    // This centers it within the main container
+},
                 pileArrow: {
-                    fontSize: "42px",
-                    marginBottom: "2px",
-                    fontWeight: "900"
-                },
-                pileValue: {
-                    fontSize: "28px",
-                    fontWeight: "800",
-                    color: "#2E2E2E",
-                    letterSpacing: "0.02em"
-                },
+    fontSize: "36px",
+    fontWeight: "900",
+    lineHeight: "1",
+    margin: "0"
+},
+pileValue: {
+    fontSize: "28px",
+    fontWeight: "800",
+    color: "#3E2A00",
+    letterSpacing: "0.02em",
+    lineHeight: "1",
+    margin: "0"
+},
                 handTitle: {
                     fontSize: "1.5rem",
                     fontWeight: "600",
@@ -430,15 +459,15 @@ instructions: {
     lineHeight: "1.5"
 },
                 handContainer: {
-                    display: "flex",
-                    gap: "12px",
-                    marginBottom: "24px",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    maxWidth: "600px"
-                },
+    display: "flex",
+    gap: "12px",
+    marginBottom: "24px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    maxWidth: "600px"
+},
                 card: {
-                    background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
+                    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
                     padding: "20px 16px",
                     borderRadius: "16px",
                     boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -472,7 +501,7 @@ instructions: {
                     fontSize: "28px",
                     fontWeight: "800",
                     marginBottom: "8px",
-                    color: "#2E2E2E",
+                    color: "#3E2A00",
                     letterSpacing: "0.02em"
                 },
                 buttonContainer: {
@@ -495,9 +524,9 @@ instructions: {
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
                 },
                 buttonPrimary: {
-                    background: "linear-gradient(135deg, #D84315 0%, #BF360C 100%)",
+                    background: "linear-gradient(135deg, #1565C0 0%, #0D47A1 100%)",
                     color: "white",
-                    boxShadow: "0 4px 12px rgba(216, 67, 21, 0.3)"
+                    boxShadow: "0 4px 12px rgba(21, 101, 192, 0.3)"
                 },
                 buttonDisabled: {
                     opacity: 0.5,
@@ -508,7 +537,7 @@ instructions: {
                     fontWeight: "600",
                     fontSize: "18px",
                     color: "#1f2937",
-                    background: "linear-gradient(135deg, #FFF8E1 0%, #F5E6D3 100%)",
+                    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
                     padding: "12px 20px",
                     borderRadius: "8px",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)"
@@ -558,7 +587,45 @@ instructions: {
                     borderRadius: "20px",
                     backdropFilter: "blur(10px)",
                     border: "1px solid rgba(255, 255, 255, 0.2)"
-                }
+                },
+popupOverlay: {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    right: "0",
+    bottom: "0",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2000
+},
+popupContent: {
+    background: "white",
+    borderRadius: "16px",
+    padding: "32px",
+    textAlign: "center",
+    maxWidth: "400px",
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
+    animation: "popup 0.3s ease-out"
+},
+popupTitle: {
+    fontSize: "24px",
+    fontWeight: "700",
+    marginBottom: "16px",
+    color: "#2E2E2E"
+},
+popupMessage: {
+    fontSize: "16px",
+    marginBottom: "24px",
+    color: "#4B5563",
+    lineHeight: "1.5"
+},
+popupButtons: {
+    display: "flex",
+    gap: "12px",
+    justifyContent: "center"
+}
             };
 
             return React.createElement("div", { style: styles.container }, 
@@ -574,30 +641,66 @@ showMenu && React.createElement("div", { style: styles.menuDropdown },
         style: styles.menuItem
     }, "🎮 New Game"),
     React.createElement("button", {
-        onClick: () => {
-            setShowSuggestion(!showSuggestion);
-            setSuggestion(getBestMove());
-        },
-        style: styles.menuItem
-    }, showSuggestion ? "🙈 Hide Hint" : "💡 Show Hint"),
-    React.createElement("button", {
-        onClick: () => setShowDeck(!showDeck),
-        style: styles.menuItem
-    }, showDeck ? "🃏 Hide Deck" : "🔍 Show Deck"),
+    onClick: () => {
+        setSuggestion(getBestMove());
+        setMenuView("hint");
+    },
+    style: styles.menuItem
+}, "💡 Show Hint"),
+React.createElement("button", {
+    onClick: () => setMenuView("deck"),
+    style: styles.menuItem
+}, "🔍 Show Deck"),
     React.createElement("div", { style: { borderTop: "1px solid #eee", margin: "8px 0" } }),
-    React.createElement("div", { style: styles.instructions },
-        React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
-        React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
-        React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
-        React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
-            React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
-            React.createElement("li", {}, "▼ piles: Play cards in descending order"),
-            React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
-            React.createElement("li", {}, "Must play at least 2 cards per turn")
-        ),
-        React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
-            "Developed by Andre Ceccotti")
-    )
+    menuView === "instructions" && React.createElement("div", { style: styles.instructions },
+    React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
+    React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
+    React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
+    React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
+        React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
+        React.createElement("li", {}, "▼ piles: Play cards in descending order"),
+        React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
+        React.createElement("li", {}, "Must play at least 2 cards per turn")
+    ),
+    React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
+        "Developed by Andre Ceccotti")
+),
+
+menuView === "hint" && React.createElement("div", { style: styles.instructions },
+    React.createElement("h3", { style: { marginBottom: "8px" } }, "💡 Hint"),
+    React.createElement("div", { style: { marginBottom: "16px" } },
+        typeof suggestion === 'string' ? suggestion : 
+        React.createElement("span", {},
+            suggestion.text,
+            suggestion.pile && getPileArrow(suggestion.pile)
+        )
+    ),
+    React.createElement("button", {
+        onClick: () => setMenuView("instructions"),
+        style: { ...styles.menuItem, background: "#f3f4f6" }
+    }, "← Back to Instructions")
+),
+
+menuView === "deck" && React.createElement("div", { style: { ...styles.instructions, maxHeight: "400px" } },
+    React.createElement("h3", { style: { marginBottom: "8px" } }, "🔍 Deck Status"),
+    React.createElement("div", { style: { ...styles.deckGrid, gap: "2px" } },
+        Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
+            const inDeck = deck.includes(card);
+            return React.createElement("div", {
+                key: card,
+                style: {
+                    ...styles.deckCard,
+                    background: inDeck ? "#E5E7EB" : "#FECACA",
+                    color: inDeck ? "#374151" : "#991B1B"
+                }
+            }, card);
+        })
+    ),
+    React.createElement("button", {
+        onClick: () => setMenuView("instructions"),
+        style: { ...styles.menuItem, background: "#f3f4f6", marginTop: "12px" }
+    }, "← Back to Instructions")
+)
 ),
 
                     React.createElement("div", { style: styles.titleTile, className: "wiggle-animation" },
@@ -630,22 +733,27 @@ showMenu && React.createElement("div", { style: styles.menuDropdown },
 
                 React.createElement("div", { style: styles.pilesGrid },
                     [
-                        { pile: "asc1", value: ascend1, color: "#00695C", arrow: "▲" },
-                        { pile: "asc2", value: ascend2, color: "#BF360C", arrow: "▲" },
-                        { pile: "desc1", value: descend1, color: "#00695C", arrow: "▼" },
-                        { pile: "desc2", value: descend2, color: "#BF360C", arrow: "▼" }
-                    ].map(({ pile, value, color, arrow }) => 
-                        React.createElement("div", {
-                            key: pile,
-                            style: getPileStyle(pile),
-                            onClick: () => selectedCard && playCard(selectedCard, pile),
-                            onMouseEnter: () => setHoveredPile(pile),
-                            onMouseLeave: () => setHoveredPile(null)
-                        },
-                            React.createElement("div", { style: { ...styles.pileArrow, color } }, arrow),
-                            React.createElement("div", { style: styles.pileValue }, value)
-                        )
-                    )
+    { pile: "asc1", value: ascend1, color: "#1565C0", arrow: "▲", isAsc: true },
+    { pile: "asc2", value: ascend2, color: "#D32F2F", arrow: "▲", isAsc: true },
+    { pile: "desc1", value: descend1, color: "#1565C0", arrow: "▼", isAsc: false },
+    { pile: "desc2", value: descend2, color: "#D32F2F", arrow: "▼", isAsc: false }
+].map(({ pile, value, color, arrow, isAsc }) => 
+    React.createElement("div", {
+        key: pile,
+        style: {
+            ...getPileStyle(pile),
+            paddingTop: isAsc ? "10px" : "14px",
+            paddingBottom: isAsc ? "10px" : "6px"
+        },
+        onClick: () => selectedCard && playCard(selectedCard, pile),
+        onMouseEnter: () => setHoveredPile(pile),
+        onMouseLeave: () => setHoveredPile(null)
+    },
+        isAsc ? React.createElement("div", { style: { ...styles.pileArrow, color } }, arrow) : null,
+        React.createElement("div", { style: styles.pileValue }, value),
+        !isAsc ? React.createElement("div", { style: { ...styles.pileArrow, color } }, arrow) : null
+    )
+)
                 ),
 
                 React.createElement("div", { style: styles.handContainer },
@@ -654,12 +762,13 @@ showMenu && React.createElement("div", { style: styles.menuDropdown },
                         const isJump10 = isJump10Card(card);
                         
                         return React.createElement("div", {
-                            key: card,
-                            style: {
-                                ...styles.card,
-                                ...(isJump10 ? styles.cardJump10 : {}),
-                                ...(isSelected ? styles.cardSelected : {})
-                            },
+    key: card,
+    style: {
+        ...styles.card,
+        ...(isJump10 ? styles.cardJump10 : {}),
+        ...(isSelected ? styles.cardSelected : {})
+    },
+    className: isJump10 ? "wiggle-animation" : "",
                             onClick: () => setSelectedCard(isSelected ? null : card),
                             onMouseEnter: (e) => {
                                 if (!isSelected) {
@@ -701,32 +810,45 @@ showMenu && React.createElement("div", { style: styles.menuDropdown },
     }, "Undo")
 ),
 
-                showSuggestion && React.createElement("div", { style: styles.suggestion },
-                    typeof suggestion === 'string' ? suggestion : 
-                    React.createElement("span", {},
-                        suggestion.text,
-                        suggestion.pile && getPileArrow(suggestion.pile)
-                    )
-                ),
-
-                showDeck && React.createElement("div", { style: styles.deckContainer },
-                    React.createElement("div", { style: styles.deckGrid },
-                        Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
-                            const inDeck = deck.includes(card);
-                            return React.createElement("div", {
-                                key: card,
-                                style: {
-                                    ...styles.deckCard,
-                                    background: inDeck ? "#E5E7EB" : "#FECACA",
-                                    color: inDeck ? "#374151" : "#991B1B"
-                                }
-                            }, card);
-                        })
-                    )
-                ),
-
-                message && React.createElement("div", { style: styles.message }, message)
+                message && React.createElement("div", { style: styles.message }, message),
+                
+                showPopup && React.createElement("div", { style: styles.popupOverlay },
+    React.createElement("div", { style: styles.popupContent },
+        React.createElement("div", { style: styles.popupTitle },
+            popupType === "win" ? "🎉 Congratulations!" : "😅 Game Over"
+        ),
+        React.createElement("div", { style: styles.popupMessage },
+            popupType === "win" 
+                ? "You played all cards! Amazing work!" 
+                : "No more moves available. Don't worry, it happens to the best of us!"
+        ),
+        React.createElement("div", { style: styles.popupButtons },
+            popupType === "lose" && React.createElement("button", {
+                onClick: () => {
+                    setShowPopup(false);
+                    undo();
+                },
+                disabled: history.length === 0,
+                style: {
+                    ...styles.button,
+                    ...(history.length === 0 ? styles.buttonDisabled : {})
+                }
+            }, "Undo Last Move"),
+            React.createElement("button", {
+                onClick: () => {
+                    setShowPopup(false);
+                    startNewGame();
+                },
+                style: {
+                    ...styles.button,
+                    ...styles.buttonPrimary
+                }
+            }, "New Game")
+        )
+    )
+)
             );
+
         }
 
         // Render the app
