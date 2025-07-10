@@ -60,7 +60,9 @@
             const [showDeck, setShowDeck] = useState(false);
             const [hoveredPile, setHoveredPile] = useState(null);
             const [selectedCard, setSelectedCard] = useState(null);
-const [showMenu, setShowMenu] = useState(false);
+const [hintCard, setHintCard] = useState(null);
+const [hintPile, setHintPile] = useState(null);
+const [isMenuExpanded, setIsMenuExpanded] = useState(false);
 const [menuView, setMenuView] = useState("instructions");
 const [showPopup, setShowPopup] = useState(false);
 const [popupType, setPopupType] = useState(""); // "win" or "lose"
@@ -94,6 +96,8 @@ const [popupType, setPopupType] = useState(""); // "win" or "lose"
                 setSuggestion("");
                 setHistory([]);
                 setSelectedCard(null);
+setHintCard(null);
+setHintPile(null);
             };
 
             const canPlayOnPile = (card, pileValue, isAsc) => {
@@ -155,6 +159,8 @@ if (updatedHand.length === 0 && deck.length === 0) {
     setShowPopup(true);
 }
                 setMessage("");
+setHintCard(null);
+setHintPile(null);
                 setSelectedCard(null);
             };
 
@@ -184,6 +190,8 @@ if (updatedHand.length === 0 && deck.length === 0) {
                 setHand(newHand);
                 setDeck(remainingDeck);
                 setPlayedThisTurn(0);
+setHintCard(null);
+setHintPile(null);
 
                 if (newHand.length === 0 && remainingDeck.length === 0) {
     setGameOver(true);
@@ -244,7 +252,7 @@ if (moves.length === 0) return { text: "No legal moves available.", pile: null }
 
 moves.sort((a, b) => a.bridges - b.bridges);
 
-return { text: `Play ${moves[0].card} on ${moves[0].displayName}`, pile: moves[0].pile };
+return { text: `Play ${moves[0].card} on ${moves[0].displayName}`, pile: moves[0].pile, card: moves[0].card };
             };
 
             const undo = () => {
@@ -518,14 +526,18 @@ instructions: {
     color: "#d8ac3a",
     letterSpacing: "0.02em"
 },
-                buttonContainer: {
-                    display: "flex",
-                    gap: "12px",
-                    marginBottom: "24px",
-                    flexWrap: "wrap",
-                    justifyContent: "center"
-                },
-                button: {
+buttonContainer: {
+    display: "flex",
+    gap: "12px",
+    marginBottom: "24px",
+    flexWrap: "wrap",
+    justifyContent: "center"
+},
+menuButtonContainer: {
+    position: "relative",
+    display: "inline-block"
+},
+button: {
     padding: "12px 20px",
     borderRadius: "8px",
     border: "none",
@@ -646,101 +658,44 @@ cardsCounter: {
 }
             };
 
-return React.createElement("div", { style: styles.container }, 
-                
-// Menu dropdown - positioned at top level
-showMenu && React.createElement("div", { 
-    style: styles.menuDropdown
+return React.createElement("div", { 
+    style: styles.container,
+    onClick: () => setIsMenuExpanded(false)
 },
-    // "X" button in top right corner
-    React.createElement("button", {
-        onClick: () => setShowMenu(false),
-        style: {
-            position: "absolute",
-            top: "8px",
-            right: "12px",
-            border: "none",
-            background: "transparent",
-            fontSize: "20px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            color: "#333"
-        },
-        "aria-label": "Close Menu"
-    }, "×"),
-
-                    React.createElement("button", {
-                        onClick: startNewGame,
-                        style: styles.menuItem
-                    }, "🎮 New Game"),
-                    React.createElement("button", {
-                        onClick: () => {
-                            setSuggestion(getBestMove());
-                            setMenuView("hint");
-                        },
-                        style: styles.menuItem
-                    }, "💡 Show Hint"),
-                    React.createElement("button", {
-                        onClick: () => setMenuView("deck"),
-                        style: styles.menuItem
-                    }, "🔍 Show Deck"),
-                    React.createElement("div", { style: { borderTop: "1px solid #eee", margin: "8px 0" } }),
-                    menuView === "instructions" && React.createElement("div", { style: styles.instructions },
-                        React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
-                        React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
-                        React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
-                        React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
-                            React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
-                            React.createElement("li", {}, "▼ piles: Play cards in descending order"),
-                            React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
-                            React.createElement("li", {}, "Must play at least 2 cards per turn")
-                        ),
-                        React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
-                            "Developed by Andre Ceccotti")
-                    ),
-
-                    menuView === "hint" && React.createElement("div", { style: styles.instructions },
-                        React.createElement("h3", { style: { marginBottom: "8px" } }, "💡 Hint"),
-                        React.createElement("div", { style: { marginBottom: "16px" } },
-                            typeof suggestion === 'string' ? suggestion : 
-                            React.createElement("span", {},
-    suggestion.text, // This now shows "Play 24 on left "
-    suggestion.pile && (
-        suggestion.pile.includes("asc") ? 
-            React.createElement("span", { style: { color: "#2a537a" } }, "▲") :
-            React.createElement("span", { style: { color: "#be5131" } }, "▼")
+                
+showDeck && React.createElement("div", { style: styles.popupOverlay },
+    React.createElement("div", { style: { ...styles.popupContent, maxWidth: "500px", maxHeight: "80vh", overflowY: "auto" } },
+        React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" } },
+            React.createElement("h3", { style: { margin: "0" } }, 
+                `Cards Remaining: ${deck.length}/98`
+            ),
+            React.createElement("button", {
+                onClick: () => setShowDeck(false),
+                style: {
+                    background: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                    padding: "0",
+                    color: "#666"
+                }
+            }, "✕")
+        ),
+        React.createElement("div", { style: { ...styles.deckGrid, gap: "2px" } },
+            Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
+                const inDeck = deck.includes(card);
+                return React.createElement("div", {
+                    key: card,
+                    style: {
+                        ...styles.deckCard,
+                        background: inDeck ? "#E5E7EB" : "#FECACA",
+                        color: inDeck ? "#374151" : "#991B1B"
+                    }
+                }, card);
+            })
+        )
     )
-)
-                        ),
-                        React.createElement("button", {
-                            onClick: () => setMenuView("instructions"),
-                            style: { ...styles.menuItem, background: "#f3f4f6" }
-                        }, "← Back to Instructions")
-                    ),
-
-                    menuView === "deck" && React.createElement("div", { style: { ...styles.instructions, maxHeight: "400px" } },
-                        React.createElement("h3", { style: { marginBottom: "8px" } }, 
-    `Cards Remaining: ${deck.length}/98`
 ),
-                        React.createElement("div", { style: { ...styles.deckGrid, gap: "2px" } },
-                            Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
-                                const inDeck = deck.includes(card);
-                                return React.createElement("div", {
-                                    key: card,
-                                    style: {
-                                        ...styles.deckCard,
-                                        background: inDeck ? "#E5E7EB" : "#FECACA",
-                                        color: inDeck ? "#374151" : "#991B1B"
-                                    }
-                                }, card);
-                            })
-                        ),
-                        React.createElement("button", {
-                            onClick: () => setMenuView("instructions"),
-                            style: { ...styles.menuItem, background: "#f3f4f6", marginTop: "12px" }
-                        }, "← Back to Instructions")
-                    )
-                ),
 
                 React.createElement("div", { style: styles.titleContainer },
 
@@ -789,14 +744,15 @@ showMenu && React.createElement("div", {
         { pile: "desc1", value: descend1, color: "#be5131", arrow: "▼", isAsc: false },
         { pile: "desc2", value: descend2, color: "#be5131", arrow: "▼", isAsc: false }
     ].map(({ pile, value, color, arrow, isAsc }, index) => 
-        React.createElement("div", {
-            key: pile,
-            style: {
-    ...getPileStyle(pile),
-    paddingTop: isAsc ? "8px" : "12px",
-    paddingBottom: isAsc ? "8px" : "8px",
-    marginRight: index === 1 ? "12px" : "0"
-},
+React.createElement("div", {
+    key: pile,
+    style: {
+        ...getPileStyle(pile),
+        paddingTop: isAsc ? "8px" : "12px",
+        paddingBottom: isAsc ? "8px" : "8px",
+        marginRight: index === 1 ? "12px" : "0"
+    },
+    className: hintPile === pile ? "wiggle-animation" : "",
         onClick: () => selectedCard && playCard(selectedCard, pile),
         onMouseEnter: () => setHoveredPile(pile),
         onMouseLeave: () => setHoveredPile(null)
@@ -830,7 +786,7 @@ showMenu && React.createElement("div", {
         ...(isJump10 ? styles.cardJump10 : {}),
         ...(isSelected ? styles.cardSelected : {})
     },
-    className: isJump10 ? "wiggle-animation" : "",
+    className: hintCard === card ? "wiggle-animation" : "",
                             onClick: () => setSelectedCard(isSelected ? null : card),
                             onMouseEnter: (e) => {
                                 if (!isSelected) {
@@ -872,13 +828,55 @@ React.createElement("div", { style: styles.buttonContainer },
             ...(history.length === 0 ? styles.buttonDisabled : {})
         }
     }, "Undo"),
-    React.createElement("button", {
-        onClick: () => setShowMenu(true),
-        style: styles.button
-    }, "Menu"),
+React.createElement("div", { style: styles.menuButtonContainer },
+React.createElement("button", {
+    onClick: (e) => {
+        e.stopPropagation();
+        setIsMenuExpanded(!isMenuExpanded);
+    },
+    style: styles.button
+}, isMenuExpanded ? "Close" : "Menu"),
+    
+    // Floating action buttons above the menu button
+    isMenuExpanded && React.createElement("div", {
+        style: {
+            position: "absolute",
+            bottom: "60px", // Position above the menu button
+            right: "0", // Align with the menu button
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            zIndex: 999
+        }
+    },
+        React.createElement("button", {
+            onClick: () => {
+                setIsMenuExpanded(false);
+                startNewGame();
+            },
+            style: { ...styles.button, borderRadius: "8px" }
+        }, "Reset"),
+React.createElement("button", {
+    onClick: () => {
+        setIsMenuExpanded(false);
+        const bestMove = getBestMove();
+        if (bestMove.pile) {
+            setHintCard(bestMove.card);
+            setHintPile(bestMove.pile);
+        }
+    },
+    style: { ...styles.button, borderRadius: "8px" }
+}, "Hint"),
+        React.createElement("button", {
+            onClick: () => {
+                setIsMenuExpanded(false);
+                setShowDeck(!showDeck);
+            },
+            style: { ...styles.button, borderRadius: "8px" }
+        }, "Deck")
+    )
 ),
-
-
+),
                 message && React.createElement("div", { style: styles.message }, message),
                 
                 showPopup && React.createElement("div", { style: styles.popupOverlay },
