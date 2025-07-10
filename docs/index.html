@@ -148,6 +148,12 @@ if (playedThisTurn + 1 < 2 && !hasLegalMove(updatedHand, currentPiles)) {
     setShowPopup(true);
 }
 
+// Check for win condition
+if (updatedHand.length === 0 && deck.length === 0) {
+    setGameOver(true);
+    setPopupType("win");
+    setShowPopup(true);
+}
                 setMessage("");
                 setSelectedCard(null);
             };
@@ -288,15 +294,15 @@ setGameOver(false);
     const baseStyle = {
         background: getBaseBackground(pile),
         padding: "10px",
-        borderRadius: "12px",
+        borderRadius: "8px",
         textAlign: "center",
         border: "2px solid transparent",
         transition: "all 0.3s ease",
         cursor: selectedCard ? "pointer" : "default",
         position: "relative",
         overflow: "hidden",
-        minHeight: "120px",
-        width: "85px",
+        minHeight: "115px",
+        width: "75px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center"
@@ -356,7 +362,7 @@ setGameOver(false);
                 },
                 progressBarFill: {
     height: "100%",
-    background: "#d8ac3a",
+    background: "#f7eed2",
     borderRadius: "18px",
     transition: "width 0.5s ease",
     position: "relative",
@@ -400,7 +406,7 @@ titleTileNumber: {
                 pilesGrid: {
     display: "flex",
     gap: "12px",
-    marginBottom: "20px",
+    marginBottom: "32px",
     justifyContent: "center",
     alignItems: "center"
 },
@@ -482,7 +488,7 @@ instructions: {
                 card: {
     background: "#f7eed2",
     padding: "20px 16px",
-    borderRadius: "16px",
+    borderRadius: "8px",
     textAlign: "center",
     width: "70px",
     height: "115px",
@@ -634,7 +640,7 @@ popupButtons: {
 },
 cardsCounter: {
     color: "white",
-    fontSize: "16px",
+    fontSize: "24px",
     fontWeight: "600",
     marginLeft: "12px"
 }
@@ -789,7 +795,7 @@ showMenu && React.createElement("div", {
     ...getPileStyle(pile),
     paddingTop: isAsc ? "8px" : "12px",
     paddingBottom: isAsc ? "8px" : "8px",
-    marginRight: index === 1 ? "24px" : "0"
+    marginRight: index === 1 ? "12px" : "0"
 },
         onClick: () => selectedCard && playCard(selectedCard, pile),
         onMouseEnter: () => setHoveredPile(pile),
