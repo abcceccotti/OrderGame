@@ -198,41 +198,47 @@ if (playedThisTurn + 1 < 2 && !hasLegalMove(updatedHand, currentPiles)) {
                 const totalRemaining = new Set(remainingCards);
 
                 const evaluateMove = (card, pileValue, isAsc) => {
-                    let lower = isAsc ? pileValue + 1 : card + 1;
-                    let upper = isAsc ? card - 1 : pileValue - 1;
-                    let available = 0;
-
-                    for (let i = lower; i <= upper; i++) {
-                        if (totalRemaining.has(i)) available++;
-                    }
-                    return available;
-                };
+    let lower, upper;
+    if (isAsc) {
+        lower = pileValue + 1;
+        upper = card - 1;
+    } else {
+        lower = card + 1;
+        upper = pileValue - 1;
+    }
+    
+    let available = 0;
+    for (let i = lower; i <= upper; i++) {
+        if (totalRemaining.has(i)) available++;
+    }
+    return available;
+};
 
                 const moves = [];
                 hand.forEach((card) => {
                     if (canPlayOnPile(card, ascend1, true)) {
                         const bridges = evaluateMove(card, ascend1, true);
-                        moves.push({ card, pile: "asc1", bridges });
+                        moves.push({ card, pile: "asc1", bridges, displayName: "left " });
                     }
                     if (canPlayOnPile(card, ascend2, true)) {
                         const bridges = evaluateMove(card, ascend2, true);
-                        moves.push({ card, pile: "asc2", bridges });
+                        moves.push({ card, pile: "asc2", bridges, displayName: "right " });
                     }
                     if (canPlayOnPile(card, descend1, false)) {
                         const bridges = evaluateMove(card, descend1, false);
-                        moves.push({ card, pile: "desc1", bridges });
+                        moves.push({ card, pile: "desc1", bridges, displayName: "left " });
                     }
                     if (canPlayOnPile(card, descend2, false)) {
                         const bridges = evaluateMove(card, descend2, false);
-                        moves.push({ card, pile: "desc2", bridges });
+                        moves.push({ card, pile: "desc2", bridges, displayName: "right " });
                     }
                 });
 
-                if (moves.length === 0) return { text: "No legal moves available.", pile: null };
+if (moves.length === 0) return { text: "No legal moves available.", pile: null };
 
-                moves.sort((a, b) => a.bridges - b.bridges);
+moves.sort((a, b) => a.bridges - b.bridges);
 
-                return { text: `Play ${moves[0].card} on `, pile: moves[0].pile };
+return { text: `Play ${moves[0].card} on ${moves[0].displayName}`, pile: moves[0].pile };
             };
 
             const undo = () => {
@@ -251,10 +257,10 @@ setGameOver(false);
             };
 
             const getPileArrow = (pile) => {
-    if (pile === "asc1") return React.createElement("span", { style: { color: "#1565C0" } }, "↑");
-    if (pile === "asc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "↑");
-    if (pile === "desc1") return React.createElement("span", { style: { color: "#1565C0" } }, "↓");
-    if (pile === "desc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "↓");
+    if (pile === "asc1") return React.createElement("span", { style: { color: "#1565C0" } }, "▲");
+    if (pile === "asc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "▲");
+    if (pile === "desc1") return React.createElement("span", { style: { color: "#1565C0" } }, "▼");
+    if (pile === "desc2") return React.createElement("span", { style: { color: "#D32F2F" } }, "▼");
 };
 
             const isJump10Card = (card) => {
@@ -272,52 +278,62 @@ setGameOver(false);
                 return false;
             };
 
-            const getPileStyle = (pile) => {
-                const baseStyle = {
-                    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
-                    padding: "10px",
-                    borderRadius: "12px",
-                    textAlign: "center",
-                    boxShadow: "0 3px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)",
-                    border: "2px solid transparent",
-                    transition: "all 0.3s ease",
-                    cursor: selectedCard ? "pointer" : "default",
-                    position: "relative",
-                    overflow: "hidden",
-                    minHeight: "85px",
-width: "85px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center"
-                };
+           const getPileStyle = (pile) => {
+    const getBaseBackground = (pile) => {
+        if (pile === "asc1" || pile === "asc2") return "#599aca";
+        if (pile === "desc1" || pile === "desc2") return "#e48d6f";
+        return "#599aca"; // fallback
+    };
 
-                const canPlay = selectedCard && canPlayCardOnPile(selectedCard, pile);
+    const baseStyle = {
+        background: getBaseBackground(pile),
+        padding: "10px",
+        borderRadius: "12px",
+        textAlign: "center",
+        border: "2px solid transparent",
+        transition: "all 0.3s ease",
+        cursor: selectedCard ? "pointer" : "default",
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "120px",
+        width: "85px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+    };
 
-                if (canPlay) {
-                    return {
-                        ...baseStyle,
-                        border: "2px solid #FF8F00",
-                        boxShadow: "0 4px 20px rgba(255, 143, 0, 0.4)",
-                        transform: "translateY(-2px)"
-                    };
-                }
+    const canPlay = selectedCard && canPlayCardOnPile(selectedCard, pile);
 
-                if (hoveredPile === pile && canPlay) {
-                    return {
-                        ...baseStyle,
-                        border: "2px solid #F57C00",
-                        boxShadow: "0 6px 24px rgba(245, 124, 0, 0.5)",
-                        transform: "translateY(-4px)"
-                    };
-                }
+    if (selectedCard && !canPlay) {
+        // Pile cannot accept the selected card - make it grey
+        return {
+            ...baseStyle,
+            background: "#9CA3AF",
+            cursor: "default"
+        };
+    }
 
-                return baseStyle;
-            };
+    if (canPlay) {
+        return {
+            ...baseStyle,
+            transform: "translateY(-2px)"
+        };
+    }
+
+    if (hoveredPile === pile && canPlay) {
+        return {
+            ...baseStyle,
+            transform: "translateY(-4px)"
+        };
+    }
+
+    return baseStyle;
+};
 
             const styles = {
                 container: {
                     minHeight: "100vh",
-                    background: "repeating-linear-gradient(45deg, #004494, #004494 8px, #0060B6 8px, #0060B6 16px)",
+                    background: "#94c0d8",
                     padding: "32px 20px",
                     display: "flex",
                     flexDirection: "column",
@@ -335,19 +351,17 @@ width: "85px",
                     backgroundColor: "rgba(255, 255, 255, 0.2)",
                     borderRadius: "20px",
                     overflow: "hidden",
-                    boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
                     border: "2px solid rgba(255, 255, 255, 0.3)",
                     margin: "0 auto"
                 },
                 progressBarFill: {
-                    height: "100%",
-                    background: "linear-gradient(90deg, #FFB62E 0%, #FFDF7E 50%, #D88B00 100%)",
-                    borderRadius: "18px",
-                    transition: "width 0.5s ease",
-                    boxShadow: "0 0 10px rgba(255, 143, 0, 0.5)",
-                    position: "relative",
-                    overflow: "hidden"
-                },
+    height: "100%",
+    background: "#d8ac3a",
+    borderRadius: "18px",
+    transition: "width 0.5s ease",
+    position: "relative",
+    overflow: "hidden"
+},
                 titleContainer: {
     display: "flex",
     gap: "8px",
@@ -357,40 +371,38 @@ width: "85px",
     marginBottom: "24px"
 },
                 titleTile: {
-    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
+    background: "#fad87d",
     padding: "12px 8px",
     borderRadius: "12px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
     width: "60px",
     height: "60px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "2px solid transparent",
-                    position: "relative",
-                    outline: "none"
-                },
-                titleTileLetter: {
-                    fontSize: "32px",
-                    fontWeight: "800",
-                    color: "#3E2A00",
-                    letterSpacing: "0.02em"
-                },
-                titleTileNumber: {
-                    fontSize: "28px",
-                    fontWeight: "800",
-                    color: "#3E2A00",
-                    letterSpacing: "0.02em"
-                },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    border: "2px solid transparent",
+    position: "relative",
+    outline: "none"
+},
+titleTileLetter: {
+    fontSize: "32px",
+    fontWeight: "800",
+    color: "#2a537a",
+    letterSpacing: "0.02em"
+},
+titleTileNumber: {
+    fontSize: "28px",
+    fontWeight: "800",
+    color: "#2a537a",
+    letterSpacing: "0.02em"
+},
                 pilesGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    display: "flex",
     gap: "12px",
     marginBottom: "20px",
-    width: "210px",
-    justifySelf: "center"    // This centers it within the main container
+    justifyContent: "center",
+    alignItems: "center"
 },
                 pileArrow: {
     fontSize: "36px",
@@ -401,7 +413,7 @@ width: "85px",
 pileValue: {
     fontSize: "28px",
     fontWeight: "800",
-    color: "#3E2A00",
+    color: "#f7eed2",
     letterSpacing: "0.02em",
     lineHeight: "1",
     margin: "0"
@@ -416,7 +428,7 @@ pileValue: {
                     display: "inline-block"
                 },
 menuButton: {
-    position: "absolute",
+    position: "fixed",
     top: "20px",
     right: "20px",
     background: "rgba(255, 255, 255, 0.9)",
@@ -430,9 +442,10 @@ menuButton: {
     zIndex: 1000
 },
 menuDropdown: {
-    position: "absolute",
-    top: "70px",
-    right: "20px",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     background: "white",
     borderRadius: "12px",
     boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
@@ -467,43 +480,38 @@ instructions: {
     maxWidth: "600px"
 },
                 card: {
-                    background: "radial-gradient(circle at 30% 30%, #FFDF7E 0%, #FFB62E 50%, #D88B00 100%)",
-                    padding: "20px 16px",
-                    borderRadius: "16px",
-                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
-                    textAlign: "center",
-                    width: "80px",
-                    height: "80px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                    border: "2px solid transparent",
-                    position: "relative",
-                    outline: "none"
-                },
+    background: "#f7eed2",
+    padding: "20px 16px",
+    borderRadius: "16px",
+    textAlign: "center",
+    width: "70px",
+    height: "115px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    transition: "all 0.3s ease",
+    cursor: "pointer",
+    border: "2px solid transparent",
+    position: "relative",
+    outline: "none"
+},
                 cardHover: {
-                    transform: "translateY(-8px)",
-                    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)"
+                    transform: "translateY(-8px)"
                 },
                 cardSelected: {
-                    background: "linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)",
-                    border: "2px solid #FF8F00",
-                    boxShadow: "0 8px 24px rgba(255, 143, 0, 0.4)",
                     transform: "translateY(-4px)"
                 },
                 cardJump10: {
-                    background: "linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)"
+                    background: "#fad87d"
                 },
                 cardNumber: {
-                    fontSize: "28px",
-                    fontWeight: "800",
-                    marginBottom: "8px",
-                    color: "#3E2A00",
-                    letterSpacing: "0.02em"
-                },
+    fontSize: "32px",
+    fontWeight: "800",
+    marginBottom: "8px",
+    color: "#d8ac3a",
+    letterSpacing: "0.02em"
+},
                 buttonContainer: {
                     display: "flex",
                     gap: "12px",
@@ -512,21 +520,19 @@ instructions: {
                     justifyContent: "center"
                 },
                 button: {
-                    padding: "12px 20px",
-                    borderRadius: "8px",
-                    border: "none",
-                    fontWeight: "600",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    background: "linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%)",
-                    color: "#3E2723",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
-                },
+    padding: "12px 20px",
+    borderRadius: "8px",
+    border: "none",
+    fontWeight: "600",
+    fontSize: "20px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    background: "#b8d0d9",
+    color: "#2a537a"
+},
                 buttonPrimary: {
-                    background: "linear-gradient(135deg, #1565C0 0%, #0D47A1 100%)",
-                    color: "white",
-                    boxShadow: "0 4px 12px rgba(21, 101, 192, 0.3)"
+                    background: "#2a537a",
+                    color: "white"
                 },
                 buttonDisabled: {
                     opacity: 0.5,
@@ -625,83 +631,112 @@ popupButtons: {
     display: "flex",
     gap: "12px",
     justifyContent: "center"
+},
+cardsCounter: {
+    color: "white",
+    fontSize: "16px",
+    fontWeight: "600",
+    marginLeft: "12px"
 }
             };
 
-            return React.createElement("div", { style: styles.container }, 
-                React.createElement("div", { style: styles.titleContainer },
-React.createElement("button", {
-    onClick: () => setShowMenu(!showMenu),
-    style: styles.menuButton
-}, "☰"),
+return React.createElement("div", { style: styles.container }, 
+                
+// Menu dropdown - positioned at top level
+showMenu && React.createElement("div", { 
+    style: styles.menuDropdown
+},
+    // "X" button in top right corner
+    React.createElement("button", {
+        onClick: () => setShowMenu(false),
+        style: {
+            position: "absolute",
+            top: "8px",
+            right: "12px",
+            border: "none",
+            background: "transparent",
+            fontSize: "20px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "#333"
+        },
+        "aria-label": "Close Menu"
+    }, "×"),
 
-showMenu && React.createElement("div", { style: styles.menuDropdown },
-    React.createElement("button", {
-        onClick: startNewGame,
-        style: styles.menuItem
-    }, "🎮 New Game"),
-    React.createElement("button", {
-    onClick: () => {
-        setSuggestion(getBestMove());
-        setMenuView("hint");
-    },
-    style: styles.menuItem
-}, "💡 Show Hint"),
-React.createElement("button", {
-    onClick: () => setMenuView("deck"),
-    style: styles.menuItem
-}, "🔍 Show Deck"),
-    React.createElement("div", { style: { borderTop: "1px solid #eee", margin: "8px 0" } }),
-    menuView === "instructions" && React.createElement("div", { style: styles.instructions },
-    React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
-    React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
-    React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
-    React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
-        React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
-        React.createElement("li", {}, "▼ piles: Play cards in descending order"),
-        React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
-        React.createElement("li", {}, "Must play at least 2 cards per turn")
-    ),
-    React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
-        "Developed by Andre Ceccotti")
-),
+                    React.createElement("button", {
+                        onClick: startNewGame,
+                        style: styles.menuItem
+                    }, "🎮 New Game"),
+                    React.createElement("button", {
+                        onClick: () => {
+                            setSuggestion(getBestMove());
+                            setMenuView("hint");
+                        },
+                        style: styles.menuItem
+                    }, "💡 Show Hint"),
+                    React.createElement("button", {
+                        onClick: () => setMenuView("deck"),
+                        style: styles.menuItem
+                    }, "🔍 Show Deck"),
+                    React.createElement("div", { style: { borderTop: "1px solid #eee", margin: "8px 0" } }),
+                    menuView === "instructions" && React.createElement("div", { style: styles.instructions },
+                        React.createElement("h3", { style: { marginBottom: "8px" } }, "How to Play Jump 10"),
+                        React.createElement("p", { style: { marginBottom: "8px" } }, "Goal: Play all 98 cards (2-99) onto four piles."),
+                        React.createElement("p", { style: { marginBottom: "8px" } }, "Rules:"),
+                        React.createElement("ul", { style: { marginLeft: "16px", marginBottom: "8px" } },
+                            React.createElement("li", {}, "▲ piles: Play cards in ascending order"),
+                            React.createElement("li", {}, "▼ piles: Play cards in descending order"),
+                            React.createElement("li", {}, "Jump 10: You can always play a card exactly 10 higher/lower than the top card"),
+                            React.createElement("li", {}, "Must play at least 2 cards per turn")
+                        ),
+                        React.createElement("p", { style: { fontSize: "12px", fontStyle: "italic", marginTop: "12px" } }, 
+                            "Developed by Andre Ceccotti")
+                    ),
 
-menuView === "hint" && React.createElement("div", { style: styles.instructions },
-    React.createElement("h3", { style: { marginBottom: "8px" } }, "💡 Hint"),
-    React.createElement("div", { style: { marginBottom: "16px" } },
-        typeof suggestion === 'string' ? suggestion : 
-        React.createElement("span", {},
-            suggestion.text,
-            suggestion.pile && getPileArrow(suggestion.pile)
-        )
-    ),
-    React.createElement("button", {
-        onClick: () => setMenuView("instructions"),
-        style: { ...styles.menuItem, background: "#f3f4f6" }
-    }, "← Back to Instructions")
-),
-
-menuView === "deck" && React.createElement("div", { style: { ...styles.instructions, maxHeight: "400px" } },
-    React.createElement("h3", { style: { marginBottom: "8px" } }, "🔍 Deck Status"),
-    React.createElement("div", { style: { ...styles.deckGrid, gap: "2px" } },
-        Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
-            const inDeck = deck.includes(card);
-            return React.createElement("div", {
-                key: card,
-                style: {
-                    ...styles.deckCard,
-                    background: inDeck ? "#E5E7EB" : "#FECACA",
-                    color: inDeck ? "#374151" : "#991B1B"
-                }
-            }, card);
-        })
-    ),
-    React.createElement("button", {
-        onClick: () => setMenuView("instructions"),
-        style: { ...styles.menuItem, background: "#f3f4f6", marginTop: "12px" }
-    }, "← Back to Instructions")
+                    menuView === "hint" && React.createElement("div", { style: styles.instructions },
+                        React.createElement("h3", { style: { marginBottom: "8px" } }, "💡 Hint"),
+                        React.createElement("div", { style: { marginBottom: "16px" } },
+                            typeof suggestion === 'string' ? suggestion : 
+                            React.createElement("span", {},
+    suggestion.text, // This now shows "Play 24 on left "
+    suggestion.pile && (
+        suggestion.pile.includes("asc") ? 
+            React.createElement("span", { style: { color: "#2a537a" } }, "▲") :
+            React.createElement("span", { style: { color: "#be5131" } }, "▼")
+    )
 )
+                        ),
+                        React.createElement("button", {
+                            onClick: () => setMenuView("instructions"),
+                            style: { ...styles.menuItem, background: "#f3f4f6" }
+                        }, "← Back to Instructions")
+                    ),
+
+                    menuView === "deck" && React.createElement("div", { style: { ...styles.instructions, maxHeight: "400px" } },
+                        React.createElement("h3", { style: { marginBottom: "8px" } }, 
+    `Cards Remaining: ${deck.length}/98`
 ),
+                        React.createElement("div", { style: { ...styles.deckGrid, gap: "2px" } },
+                            Array.from({ length: 98 }, (_, i) => i + 2).map((card) => {
+                                const inDeck = deck.includes(card);
+                                return React.createElement("div", {
+                                    key: card,
+                                    style: {
+                                        ...styles.deckCard,
+                                        background: inDeck ? "#E5E7EB" : "#FECACA",
+                                        color: inDeck ? "#374151" : "#991B1B"
+                                    }
+                                }, card);
+                            })
+                        ),
+                        React.createElement("button", {
+                            onClick: () => setMenuView("instructions"),
+                            style: { ...styles.menuItem, background: "#f3f4f6", marginTop: "12px" }
+                        }, "← Back to Instructions")
+                    )
+                ),
+
+                React.createElement("div", { style: styles.titleContainer },
 
                     React.createElement("div", { style: styles.titleTile, className: "wiggle-animation" },
                         React.createElement("div", { style: styles.titleTileLetter }, "J")
@@ -720,38 +755,59 @@ menuView === "deck" && React.createElement("div", { style: { ...styles.instructi
                     )
                 ),
 
-                React.createElement("div", { style: styles.progressContainer },
-                    React.createElement("div", { style: styles.progressBarBg },
-                        React.createElement("div", { 
-                            style: {
-                                ...styles.progressBarFill,
-                                width: `${((98 - hand.length - deck.length) / 98) * 100}%`
-                            }
-                        })
-                    )
-                ),
+                React.createElement("div", { 
+    style: {
+        ...styles.progressContainer,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+},
+    React.createElement("div", { style: styles.progressBarBg },
+        React.createElement("div", { 
+            style: {
+                ...styles.progressBarFill,
+                width: `${((98 - hand.length - deck.length) / 98) * 100}%`
+            }
+        })
+    ),
+    React.createElement("div", { style: styles.cardsCounter }, 
+        `${98 - hand.length - deck.length}/98`
+    )
+),
 
                 React.createElement("div", { style: styles.pilesGrid },
-                    [
-    { pile: "asc1", value: ascend1, color: "#1565C0", arrow: "▲", isAsc: true },
-    { pile: "asc2", value: ascend2, color: "#D32F2F", arrow: "▲", isAsc: true },
-    { pile: "desc1", value: descend1, color: "#1565C0", arrow: "▼", isAsc: false },
-    { pile: "desc2", value: descend2, color: "#D32F2F", arrow: "▼", isAsc: false }
-].map(({ pile, value, color, arrow, isAsc }) => 
-    React.createElement("div", {
-        key: pile,
-        style: {
-            ...getPileStyle(pile),
-            paddingTop: isAsc ? "10px" : "14px",
-            paddingBottom: isAsc ? "10px" : "6px"
-        },
+    [
+        { pile: "asc1", value: ascend1, color: "#2a537a", arrow: "▲", isAsc: true },
+        { pile: "asc2", value: ascend2, color: "#2a537a", arrow: "▲", isAsc: true },
+        { pile: "desc1", value: descend1, color: "#be5131", arrow: "▼", isAsc: false },
+        { pile: "desc2", value: descend2, color: "#be5131", arrow: "▼", isAsc: false }
+    ].map(({ pile, value, color, arrow, isAsc }, index) => 
+        React.createElement("div", {
+            key: pile,
+            style: {
+    ...getPileStyle(pile),
+    paddingTop: isAsc ? "8px" : "12px",
+    paddingBottom: isAsc ? "8px" : "8px",
+    marginRight: index === 1 ? "24px" : "0"
+},
         onClick: () => selectedCard && playCard(selectedCard, pile),
         onMouseEnter: () => setHoveredPile(pile),
         onMouseLeave: () => setHoveredPile(null)
     },
-        isAsc ? React.createElement("div", { style: { ...styles.pileArrow, color } }, arrow) : null,
+        isAsc ? React.createElement("div", { 
+    style: { 
+        ...styles.pileArrow, 
+        color: (selectedCard && !canPlayCardOnPile(selectedCard, pile)) ? "#6B7280" : color 
+    } 
+}, arrow) : null,
         React.createElement("div", { style: styles.pileValue }, value),
-        !isAsc ? React.createElement("div", { style: { ...styles.pileArrow, color } }, arrow) : null
+        !isAsc ? React.createElement("div", { 
+    style: { 
+        ...styles.pileArrow, 
+        color: (selectedCard && !canPlayCardOnPile(selectedCard, pile)) ? "#6B7280" : color 
+    } 
+}, arrow) : null
     )
 )
                 ),
@@ -782,15 +838,17 @@ menuView === "deck" && React.createElement("div", { style: { ...styles.instructi
                                 }
                             }
                         },
-                            React.createElement("div", { style: styles.cardNumber }, card),
-                            isJump10 && React.createElement("div", { 
-                                style: { fontSize: "9px", color: "#D97706", fontWeight: "600" } 
-                            }, "JUMP 10!")
+                            React.createElement("div", { 
+    style: {
+        ...styles.cardNumber,
+        color: isSelected ? "#2a537a" : "#d8ac3a"
+    }
+}, card)
                         );
                     })
                 ),
 
-                React.createElement("div", { style: styles.buttonContainer },
+React.createElement("div", { style: styles.buttonContainer },
     React.createElement("button", {
         onClick: endTurn,
         disabled: playedThisTurn < 2 || gameOver,
@@ -807,7 +865,11 @@ menuView === "deck" && React.createElement("div", { style: { ...styles.instructi
             ...styles.button,
             ...(history.length === 0 ? styles.buttonDisabled : {})
         }
-    }, "Undo")
+    }, "Undo"),
+    React.createElement("button", {
+        onClick: () => setShowMenu(true),
+        style: styles.button
+    }, "Menu"),
 ),
 
 
@@ -821,7 +883,7 @@ menuView === "deck" && React.createElement("div", { style: { ...styles.instructi
         React.createElement("div", { style: styles.popupMessage },
             popupType === "win" 
                 ? "You played all cards! Amazing work!" 
-                : "No more moves available. Don't worry, it happens to the best of us!"
+                : `So close! Just ${deck.length + hand.length} cards stood between you and victory.`
         ),
         React.createElement("div", { style: styles.popupButtons },
             popupType === "lose" && React.createElement("button", {
