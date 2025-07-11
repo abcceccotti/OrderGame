@@ -60,6 +60,7 @@
             const [showDeck, setShowDeck] = useState(false);
             const [hoveredPile, setHoveredPile] = useState(null);
             const [selectedCard, setSelectedCard] = useState(null);
+const [showHelp, setShowHelp] = useState(false);
 const [hintCard, setHintCard] = useState(null);
 const [hintPile, setHintPile] = useState(null);
 const [isMenuExpanded, setIsMenuExpanded] = useState(false);
@@ -121,8 +122,6 @@ setHintPile(null);
                 else if (pile === "desc2") valid = canPlayOnPile(card, descend2, false);
 
                 if (!valid) {
-                    setMessage(`Cannot play ${card} on that pile`);
-                    setTimeout(() => setMessage(""), 3000);
                     return;
                 }
 
@@ -176,11 +175,6 @@ setHintPile(null);
             };
 
             const endTurn = () => {
-                if (playedThisTurn < 2) {
-                    setMessage("You must play at least 2 cards per turn.");
-                    setTimeout(() => setMessage(""), 3000);
-                    return;
-                }
                 if (gameOver) return;
 
                 const drawCount = Math.min(HAND_SIZE - hand.length, deck.length);
@@ -502,7 +496,8 @@ instructions: {
     height: "115px",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+justifyContent: "flex-start",
+paddingTop: "30px",
     alignItems: "center",
     transition: "all 0.3s ease",
     cursor: "pointer",
@@ -651,7 +646,7 @@ popupButtons: {
     justifyContent: "center"
 },
 cardsCounter: {
-    color: "white",
+    color: "#f7eed2",
     fontSize: "24px",
     fontWeight: "600",
     marginLeft: "12px"
@@ -666,9 +661,9 @@ return React.createElement("div", {
 showDeck && React.createElement("div", { style: styles.popupOverlay },
     React.createElement("div", { style: { ...styles.popupContent, maxWidth: "500px", maxHeight: "80vh", overflowY: "auto" } },
         React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" } },
-            React.createElement("h3", { style: { margin: "0" } }, 
-                `Cards Remaining: ${deck.length}/98`
-            ),
+React.createElement("h3", { style: { margin: "0", textAlign: "center" } }, 
+    `Cards Still in Deck: ${deck.length}/98`
+),
             React.createElement("button", {
                 onClick: () => setShowDeck(false),
                 style: {
@@ -688,11 +683,57 @@ showDeck && React.createElement("div", { style: styles.popupOverlay },
                     key: card,
                     style: {
                         ...styles.deckCard,
-                        background: inDeck ? "#E5E7EB" : "#FECACA",
-                        color: inDeck ? "#374151" : "#991B1B"
+background: inDeck ? "#f7eed2" : "#E5E7EB",  // Hand card color if in deck, gray if played
+color: inDeck ? "#d8ac3a" : "#374151"        // Hand card text if in deck, gray text if played
                     }
                 }, card);
             })
+        )
+    )
+),
+showHelp && React.createElement("div", { style: styles.popupOverlay },
+    React.createElement("div", { style: { ...styles.popupContent, maxWidth: "600px", maxHeight: "80vh", overflowY: "auto" } },
+        React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" } },
+            React.createElement("h3", { style: { margin: "0", fontSize: "18px", fontWeight: "700" } }, 
+                "How to Play Jump 10"
+            ),
+            React.createElement("button", {
+                onClick: () => setShowHelp(false),
+                style: {
+                    background: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                    padding: "0",
+                    color: "#666"
+                }
+            }, "✕")
+        ),
+        React.createElement("div", { style: { fontSize: "14px", lineHeight: "1.6", textAlign: "left" } },
+            React.createElement("p", { style: { marginBottom: "8px", fontStyle: "italic" } }, 
+                "Jump 10 is an online version of \"The Game\" by Steffen Benndorf, developed by Andre Ceccotti from Belo Horizonte, Brazil."
+            ),
+            React.createElement("h4", { style: { marginTop: "16px", marginBottom: "8px", fontSize: "16px", fontWeight: "600" } }, "Objective"),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "Play all 98 cards (numbered 2-99) by placing them on four piles. Win by emptying your hand and the deck!"
+            ),
+            React.createElement("h4", { style: { marginTop: "16px", marginBottom: "8px", fontSize: "16px", fontWeight: "600" } }, "The Four Piles"),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "• Two Ascending Piles (▲, starting at 1): Play cards in increasing order"
+            ),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "• Two Descending Piles (▼, starting at 100): Play cards in decreasing order"
+            ),
+            React.createElement("h4", { style: { marginTop: "16px", marginBottom: "8px", fontSize: "16px", fontWeight: "600" } }, "Basic Rules"),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "1. You must play at least 2 cards before ending your turn"
+            ),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "2. Cards must be higher than the current pile value (ascending) or lower (descending)"
+            ),
+            React.createElement("p", { style: { marginBottom: "8px" } }, 
+                "3. Jump 10: You can play a card that's exactly 10 away from the pile's current value, even if it goes \"backwards\" (e.g., play 45 on an ascending pile showing 55) or \"forwards\" (e.g., play 27 on a descending pile showing 17)"
+            )
         )
     )
 ),
@@ -800,12 +841,20 @@ React.createElement("div", {
                                 }
                             }
                         },
-                            React.createElement("div", { 
+React.createElement("div", { 
     style: {
         ...styles.cardNumber,
         color: isSelected ? "#2a537a" : "#d8ac3a"
     }
-}, card)
+}, card),
+isJump10 && React.createElement("div", {
+    style: {
+        fontSize: "32px",
+        fontWeight: "800",
+        color: isSelected ? "#2a537a" : "#d8ac3a",
+        marginTop: "-20px"
+    }
+}, "★")
                         );
                     })
                 ),
@@ -873,7 +922,14 @@ React.createElement("button", {
                 setShowDeck(!showDeck);
             },
             style: { ...styles.button, borderRadius: "8px" }
-        }, "Deck")
+        }, "Deck"),
+React.createElement("button", {
+    onClick: () => {
+        setIsMenuExpanded(false);
+        setShowHelp(true);
+    },
+    style: { ...styles.button, borderRadius: "8px" }
+}, "Help")
     )
 ),
 ),
@@ -882,7 +938,7 @@ React.createElement("button", {
                 showPopup && React.createElement("div", { style: styles.popupOverlay },
     React.createElement("div", { style: styles.popupContent },
         React.createElement("div", { style: styles.popupTitle },
-            popupType === "win" ? "🎉 Congratulations!" : "😅 Game Over"
+            popupType === "win" ? "Congratulations!" : "Game Over"
         ),
         React.createElement("div", { style: styles.popupMessage },
             popupType === "win" 
@@ -900,7 +956,7 @@ React.createElement("button", {
                     ...styles.button,
                     ...(history.length === 0 ? styles.buttonDisabled : {})
                 }
-            }, "Undo Last Move"),
+            }, "Undo"),
             React.createElement("button", {
                 onClick: () => {
                     setShowPopup(false);
@@ -910,7 +966,7 @@ React.createElement("button", {
                     ...styles.button,
                     ...styles.buttonPrimary
                 }
-            }, "New Game")
+            }, "Reset")
         )
     )
 )
